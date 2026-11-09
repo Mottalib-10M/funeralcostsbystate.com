@@ -9,7 +9,7 @@ export default definePage({
   sources: ['va_vgli', 'irs_15b', 'nchs_us'],
   slug: 'term-life-insurance-rates-by-age',
   nav: 'Term life rates by age',
-  card: 'The two published federal rate tables, VGLI and IRS Table 2-2, by age, with the chance a term policy pays.',
+  card: 'Two federal rate tables by age, the veterans’ group life plan and the tax agency’s table, with the chance a term policy pays.',
   title: 'Term Life Insurance Rates by Age: Federal Rate Charts 2026',
   description: 'Term life insurance rates by age from the two published federal tables, VGLI and IRS Table 2-2, with the chance a term policy pays out at each age (NCHS).',
   h1: 'Term life insurance rates by age: the federal charts and the odds',

@@ -12,8 +12,8 @@ export const YEAR = 2026;
 export const SITE_FOUNDED = '2026';
 export const LAST_UPDATED = '2026-11-07';
 export const AUTHOR_NAME = 'Radif Partners';
-export const AUTHOR_ROLE: Record<string, string> = {"en": "Independent publisher of US funeral cost and final expense calculators built on Census, BLS, NCHS, VA and IRS data"};
-export const AUTHOR_DESC: Record<string, string> = {"en": "Radif Partners publishes Funeral Costs by State. We divide what funeral homes, cemeteries and crematories in each state took in during the 2022 Economic Census by the deaths the Census Bureau counted there, carry it forward with the BLS funeral price index, then subtract what the VA and Social Security pay. Life cover and final expense pages use the NCHS life tables and the federal rules read on va.gov, irs.gov and ecfr.gov. We sell no policy and no funeral, and we ask for no phone number or e-mail."};
+export const AUTHOR_ROLE: Record<string, string> = {"en": "Independent publisher of US funeral cost and final expense calculators built on Census Bureau, Labor Department, life table, Veterans Affairs and tax agency (IRS) figures"};
+export const AUTHOR_DESC: Record<string, string> = {"en": "Radif Partners publishes Funeral Costs by State. We divide what funeral homes, cemeteries and crematories in each state took in during the 2022 Economic Census by the deaths the Census Bureau counted there, carry it forward with the federal funeral price index, then subtract what the VA and Social Security pay. Life cover and final expense pages use the NCHS life tables and the federal rules read on va.gov, irs.gov and ecfr.gov. We sell no policy and no funeral, and we ask for no phone number or e-mail."};
 /** Sujets sur lesquels l'editeur est competent (schema.org knowsAbout). Ce sont les
  *  themes reellement traites par le site, pas une liste de mots-cles : un sujet
  *  declare ici sans page qui le couvre est une declaration fausse. */

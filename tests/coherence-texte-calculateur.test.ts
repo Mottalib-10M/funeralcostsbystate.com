@@ -56,7 +56,10 @@ describe('page prépayée : calculateur et tableau d’accord', () => {
     const spec = getSpec('prepaid');
     const v = Object.fromEntries(spec.inputs.map((i) => [i.id, i.def]));
     const out = spec.run(v, {});
-    const c = E.prepaidCase({ price: v.price, age: 70, sex: 'f', rate: 0.02 });
+    const c = E.prepaidCase({ price: v.price, age: 70, sex: 'f', rate: 0.02, state: E.STATES[v.state] });
+    expect(E.STATES[v.state]).toBe('TX');
+    // même femme de 70 ans au Texas : même âge médian que la page assurance obsèques (testeurs du 2026-11-09)
+    expect(c.median).toBe(E.medianAgeAtDeath(70, 'f', 'TX'));
     expect(out.rows[0][1]).toBe(m(c.later));
     expect(out.rows[0][0]).toContain(new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(c.median));
     const body = pageById('prepaid-funeral')!.body(helpers(true));
@@ -66,7 +69,7 @@ describe('page prépayée : calculateur et tableau d’accord', () => {
 
 describe('mêmes valeurs par défaut d’une page à l’autre', () => {
   it('tout champ État part du Texas, toute question Social Security de « non »', () => {
-    for (const k of ['state', 'cremation', 'burial', 'seniors']) {
+    for (const k of ['state', 'cremation', 'burial', 'seniors', 'prepaid']) {
       const st = getSpec(k).inputs.find((i) => i.id === 'state')!;
       expect(st.options![st.def].label, k).toBe('Texas');
     }

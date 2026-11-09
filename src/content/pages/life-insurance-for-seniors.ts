@@ -10,7 +10,7 @@ export default definePage({
   sources: ['nchs_states', 'nchs_us', 'va_vgli'],
   slug: 'life-insurance-for-seniors',
   nav: 'Life insurance for seniors',
-  card: 'How long cover bought after 60 has to last in your state, the odds a term policy pays, and the VGLI rate.',
+  card: 'How long cover bought after 60 has to last in your state, the odds a term policy pays, and the veterans’ group life rate.',
   title: 'Life Insurance for Seniors: How Long Cover Must Last',
   description: 'Life insurance for seniors: how long cover bought after 60 has to last in your state, the chance a 10-year term pays out, and what permanent cover costs.',
   h1: 'Life insurance for seniors: how long the cover has to last',

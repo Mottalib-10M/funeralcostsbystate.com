@@ -121,10 +121,11 @@ export function funeralGap(i: GapIn) {
 export const trendField = () => Math.round(funeralTrend() * 1000) / 10;
 export const trendFromField = (pct: number) => (pct === trendField() ? funeralTrend() : pct / 100);
 
-/** Prepaid price against saving: the same funeral grown to the median age at death (US table), and what to set
- *  aside today at a savings rate. Used by the prepaid calculator and by the table of the prepaid page. */
-export function prepaidCase(i: { price: number; age: number; sex: Sex; rate: number; trend?: number }) {
-  const median = medianAgeAtDeath(i.age, i.sex);
+/** Prepaid price against saving: the same funeral grown to the median age at death (state table, US by default),
+ *  and what to set aside today at a savings rate. Used by the prepaid calculator and by the table of the prepaid
+ *  page (Texas since the testeurs of 2026-11-09: 86 on the burial page, 87.5 here, for the same woman of 70). */
+export function prepaidCase(i: { price: number; age: number; sex: Sex; rate: number; trend?: number; state?: StateCode | 'US' }) {
+  const median = medianAgeAtDeath(i.age, i.sex, i.state ?? 'US');
   const years = Math.max(0, median - i.age);
   const later = grow(i.price, i.trend ?? funeralTrend(), years);
   return { median, years, later, need: later / Math.pow(1 + i.rate, years) };

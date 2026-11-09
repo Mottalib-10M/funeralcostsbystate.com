@@ -14,6 +14,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ETAT_MEMO } from '../../lib/fc-defaults';
 import NumberField from '../ui/NumberField';
+import Toggle from '../ui/Toggle';
 import SelectField from '../ui/SelectField';
 import { getSpec } from '../../lib/mini-specs';
 import MentionExemple from './MentionExemple';
@@ -36,7 +37,9 @@ export default function MiniSim({ kind, lang = 'en', href, defaults = {}, primar
     try { const nom = localStorage.getItem(ETAT_MEMO); const o = champ.options!.find((x) => x.label === nom); if (o) setV((a) => ({ ...a, state: Number(o.value) })); } catch { /* storage refused */ }
   }, []);
   const fid = (id: string) => `${idPrefix}-${kind}-${id}`;
-  const champ = (i: MiniInput) => (i.options
+  const champ = (i: MiniInput) => (i.options && i.vue === 'boutons'
+    ? <div key={i.id}><div className="grid"><Toggle id={fid(i.id)} label={i.label} value={String(v[i.id])} onChange={(x) => set(i.id)(Number(x))} options={i.options} /></div>{i.help && <p className="mt-1 text-xs text-navy-500">{i.help}</p>}</div>
+    : i.options
     ? <SelectField key={i.id} id={fid(i.id)} label={i.label} value={String(v[i.id])} onChange={(x) => set(i.id)(Number(x))} options={i.options} help={i.help} />
     : <NumberField key={i.id} id={fid(i.id)} label={i.label} value={v[i.id]} onChange={set(i.id)} unit={i.unit} max={i.max} decimals={i.decimals} help={i.help} />);
   const avances = spec.inputs.filter((i) => i.avance);
@@ -55,7 +58,7 @@ export default function MiniSim({ kind, lang = 'en', href, defaults = {}, primar
           )}
         </form>
         <div aria-live="polite" {...(primary ? { 'data-resultat': '' } : {})} className="self-start border-l-4 border-accent-500 bg-accent-50 p-4">
-          <MentionExemple lang={lang} touched={touched} />
+          {!spec.sansMention && <MentionExemple lang={lang} touched={touched} suppose={spec.exemple?.(v)} />}
           <p className="text-sm font-medium text-navy-700">{out.head[0]}</p>
           <p className="tabular-nums mt-1 text-4xl font-bold text-navy-900">{out.head[1]}</p>
           <table className="ledger mt-3 w-full text-sm"><tbody>

@@ -1,10 +1,17 @@
 /** Mini-calculator types (RECETTE §9.3). Each spec lives in `lib/mini-specs.ts` and calls the tested engine. */
 export interface MiniInput { id: string; label: string; def: number; unit?: string; max?: number; decimals?: number; help?: string; options?: Array<{ value: string; label: string }>;
   /** Champ facultatif rangé dans le repli « Plus de détails » ; sa valeur actuelle reste lisible dans le titre du repli. */
-  avance?: boolean }
+  avance?: boolean;
+  /** `boutons` : une question à deux réponses (No / Yes) se pose avec des boutons, comme sur l'accueil
+   *  (testeurs du 2026-11-09 : boutons sur une page, liste déroulante sur l'autre pour la même question). */
+  vue?: 'boutons' }
 export interface MiniOut { head: [string, string]; rows: Array<[string, string]>; note?: string }
 export interface MiniSpec {
   title: string; cta: string; ctaPage?: string; inputs: MiniInput[];
+  /** Ce que suppose l'exemple chargé, en mots simples, lu dans la mention « Example, not your result yet: … ». */
+  exemple?: (v: Record<string, number>) => string;
+  /** Aucune mention d'exemple : rien de personnel à calculer (une simple consultation d'État). */
+  sansMention?: boolean;
   /** `touched` : les champs que le lecteur a modifiés (testeurs naïfs du 2026-11-08). Tant qu'il est vide,
    *  le composant pose la mention « Exemple, pas encore votre résultat » ; une spec peut aussi s'en servir
    *  pour taire un verdict (« vous êtes éligible ») tant que les chiffres sont ceux de l'exemple. */

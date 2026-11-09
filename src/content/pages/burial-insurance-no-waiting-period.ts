@@ -11,7 +11,7 @@ export default definePage({
   sources: ['nchs_us', 'nchs_states', 'census_ec'],
   slug: 'burial-insurance-no-waiting-period',
   nav: 'No waiting period and no exam',
-  card: 'Guaranteed issue, simplified issue and graded benefits: what is paid in the first years and the odds of needing it.',
+  card: 'Policies with no health questions or no exam: what they pay if death comes in the first years, and the odds of it.',
   title: 'Burial Insurance With No Waiting Period or Medical Exam',
   description: 'Burial insurance with no waiting period or medical exam: guaranteed and simplified issue, what a graded policy pays in its first years, and the odds involved.',
   h1: 'Burial insurance with no waiting period, and life cover with no exam',

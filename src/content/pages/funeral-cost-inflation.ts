@@ -9,7 +9,7 @@ export default definePage({
   sources: ['bls_cpi', 'census_ec'],
   slug: 'funeral-cost-inflation',
   nav: 'Funeral cost inflation',
-  card: 'The BLS funeral price index since 1987: what an old bill or an old policy is worth at today’s prices.',
+  card: 'The federal funeral price index since 1987: what an old bill or an old policy is worth at today’s prices.',
   title: 'Funeral Cost Inflation: BLS Funeral Price Index Since 1987',
   description: 'Funeral cost inflation from the BLS price index: what a funeral bill or policy from any year since 1987 is worth today, and how fast funeral prices rise.',
   h1: 'Funeral cost inflation, year by year since 1987',
