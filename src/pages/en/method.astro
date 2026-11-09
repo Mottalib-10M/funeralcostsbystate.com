@@ -1,0 +1,52 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { route } from '../../i18n/routes';
+import { breadcrumbSchema, articleSchema } from '../../lib/seo';
+import { displayDate, formatNumber } from '../../lib/format';
+import { P, type SourceKey } from '../../lib/engine/params';
+import { helpers } from '../../lib/helpers';
+const lang = 'en';
+const h = helpers(true);
+const { E, m, m2, pc } = h;
+const L = (k: SourceKey, t?: string) => `<a href="${P.sources[k].url}" target="_blank" rel="nofollow noopener">${t ?? P.sources[k].label.en}</a>`;
+const us = E.spendPerDeath('US');
+const k = E.spendToday('US').factor;
+const q65 = E.qx(65, 'f');
+const s10 = E.survival(65, 10, 'f');
+const nonSvc = E.vaAllowance('nonService');
+const imp = E.imputedIncome(45, 200000, 100);
+---
+<PageLayout title="Funeral Costs by State Method: Census, BLS, NCHS and Limits" description="How Funeral Costs by State works out spending per death, the funeral price trend, the median age at death and the gap after the VA and Social Security pay." lang={lang} jsonLd={[articleSchema({ title: 'How the figures are worked out', description: 'Method of Funeral Costs by State', path: route('method', lang), lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'Method', path: route('method', lang) }])]} breadcrumbs={[{ label: 'Method' }]}>
+  <header class="mb-6"><p class="kicker">Method</p><h1 class="mt-1 text-3xl font-bold text-navy-900 md:text-4xl">How the figures are worked out</h1></header>
+  <div class="prose prose-slate max-w-none">
+    <p>Every calculator calls one engine of pure functions, fed by four files: the parameter file of federal amounts and rules, and three data files built by a script from the Census Bureau, the NCHS and the BLS. No amount is typed into a page. The parameter file was last checked against its sources on {displayDate(P.retrieved_at, 'en-US')}. Updates are made by hand when an agency publishes new figures; nothing is fetched automatically.</p>
+
+    <h2>Spending per death</h2>
+    <p>Revenue of all establishments in Census industry 8122 (death care services), 812210 (funeral homes and funeral services) and 812220 (cemeteries and crematories), for each state and the United States, from the 2022 Economic Census file EC2281BASIC (<Fragment set:html={L('census_ec')} />). Deaths in calendar 2022 are estimated as the mean of the Census estimates of deaths for the years July 2021 to June 2022 and July 2022 to June 2023 (<Fragment set:html={L('census_pop')} />). Spending per death = revenue ÷ deaths. United States: {m(us.all as number * us.deaths)} ÷ {h.num(Math.round(us.deaths))} = {m(us.all as number)}. Where the Census withholds a figure (flag D), the cell is left blank, never estimated. Revenue includes merchandise, pre-need sales and cemetery property sold in the year; it is counted where the establishment is.</p>
+
+    <h2>Bringing it to today, and to the age of death</h2>
+    <p>Today’s figure = 2022 figure × (funeral index of {h.month} ÷ annual average of {P.cpi.baseYear}) = × {formatNumber(k, 3)}, on the BLS CPI-U funeral expenses series CUUR0000SEGD02 (<Fragment set:html={L('bls_cpi')} />). The trend is the geometric mean yearly change of the annual averages from {P.cpi.trendFrom} to {P.cpi.trendTo}: {pc(E.funeralTrend(), 2)}. The figure at the age of death = today’s figure × (1 + trend) to the power of the years to the median age at death.</p>
+    <p>The median age at death is the age at which the probability of having died, starting from the age typed, reaches one half. For a person aged x, the chance of being alive n years later is (1 − q<sub>x</sub>)(1 − q<sub>x+1</sub>)…(1 − q<sub>x+n−1</sub>), where q is the NCHS probability of dying before the next birthday, for the sex chosen, from the state table of 2022 (<Fragment set:html={L('nchs_states')} />) or the United States table of 2024 (<Fragment set:html={L('nchs_us')} />). Inside a year the probability is spread evenly. Example: q<sub>65</sub> for women in the United States is {pc(q65, 3)}, and the chance a woman of 65 is alive ten years later is {pc(s10)}. Ages above 100 use the rate at 100. These are period tables: today’s death rates applied to the future, with no allowance for improvement, for the whole population, not insured lives.</p>
+
+    <h2>What is taken off</h2>
+    <p>VA burial allowance: {m(P.va.serviceConnected)} for a service-connected death on or after September 11, 2001, {m(P.va.serviceConnectedBefore2001)} before; for a death not service-connected on or after {h.D.vaFrom}, {m(nonSvc.burial)} burial plus {m(nonSvc.plot)} plot or interment, and the earlier amounts for earlier dates (<Fragment set:html={L('va_burial')} />). These are maximums, paid only when the VA’s conditions are met. Social Security lump-sum death payment: {m(P.ssa.lumpSum)} when a spouse or eligible child exists (<Fragment set:html={L('ssa_cfr')} />). Savings and cover held are subtracted at face value, with no interest. The gap is never shown below zero.</p>
+
+    <h2>Policies</h2>
+    <p>Final expense and whole life: the break-even age is the age at which the premium typed, times twelve, times the years paid, equals the face amount; if premiums stop before that, there is none. Expected premiums = Σ (chance of being alive at the start of each year × twelve premiums), to age 100. The whole life yardstick is the face amount ÷ (twelve × expected years of premiums), with no interest or costs. Graded benefit: during the period, a death pays the premiums paid times one plus the refund rate typed, capped at the face amount. No premium is ever suggested.</p>
+    <p>Term life: the payout chance is one minus the chance of being alive at the end of the term. VGLI premiums: the VA rate per {m(10000)} for the age band, rates of {h.date(P.vgli.asOf)} (<Fragment set:html={L('va_vgli')} />). IRS Table 2-2: cost per {m(1000)} a month for the age at the end of the year, times the cover above {m(P.irsTable22.exclusion)}, less what the employee paid after tax (<Fragment set:html={L('irs_15b')} />); Publication 15-B’s example of an employee of 45 with {m(200000)} of cover who paid {m(100)} gives {m(imp.taxable)}. DIME need: debts + income × years + mortgage + education + funeral − savings − group cover − policies held − the Social Security lump sum.</p>
+    <p>Estate tax on a payout: {pc(P.estate.topRate, 0)} of the estate above the {P.year} basic exclusion of {m(P.estate.basicExclusion)} plus any ported unused exclusion; with every amount above the exclusion in the top bracket of the Form 706 rate schedule, the extra tax is the difference with and without the payout (<Fragment set:html={L('irs_estate')} />, <Fragment set:html={L('irs_706')} />). Nothing when everything goes to a citizen spouse. Surrender: ordinary income on the cash value above the premiums paid (<Fragment set:html={L('irs_525')} />). IUL: credit = max(floor, min(cap, participation × index change)) for each yearly segment, on index changes the user types.</p>
+
+    <h2>Tests</h2>
+    <p>Run on every build: the national spending per death; the index factor; the survival probability recomputed by hand; the median age at death bracketing one half; the VA amounts for each date band and kind of death; the Social Security payment; the IRS example; the estate tax at and above the exclusion; a surrender below cost giving no tax; the IUL floor and cap. A failing test stops the build.</p>
+
+    <h2>What is left out</h2>
+    <ul>
+      <li>insurance and funeral prices, underwriting and policy terms, which differ between providers;</li>
+      <li>county or state help for indigent burials, employer or union death benefits, and Social Security survivor benefits;</li>
+      <li>state estate and inheritance taxes, and state income tax;</li>
+      <li>interest on savings in the gap calculator, and any change in death rates or in the VA amounts after today;</li>
+      <li>causes of death and health: the life tables are used only as probabilities by age, sex and state.</li>
+    </ul>
+    <p>Life tables: Source: CDC/NCHS, available free of charge at cdc.gov. Use of this material does not imply endorsement by the CDC, NCHS or the U.S. government. Census and BLS data are U.S. government works; the per-death figures are our own calculations.</p>
+  </div>
+</PageLayout>

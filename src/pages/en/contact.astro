@@ -1,0 +1,22 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import LegalIdentity from '../../components/LegalIdentity.astro';
+import { CONTACT_EMAIL, LAST_UPDATED, SITE_NAMES } from '../../data/site-config';
+import { route } from '../../i18n/routes';
+const lang = 'en';
+---
+<PageLayout title={`Contact ${SITE_NAMES[lang]}: a figure, a rule, the widget`} description="Write to Funeral Costs by State when a VA amount, a price index figure or a calculation looks wrong, when an agency publishes new figures, or to embed the calculator." lang={lang} noindex={true} breadcrumbs={[{ label: 'Contact' }]} showAuthor={false}>
+  <div class="prose prose-slate max-w-none">
+    <h1>Contact</h1>
+    <p>Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. A person reads every message.</p>
+    <h2>A figure looks wrong</h2>
+    <p>Send the page address, the values you entered and the figure you expected, with the va.gov, irs.gov, bls.gov, census.gov or ecfr.gov page you are relying on if you have it. We reread the source, correct the parameter file or the engine, add a test for the case and date the change.</p>
+    <h2>What we cannot do</h2>
+    <p>We do not sell insurance or funerals, give quotes or advise on a policy, and we cannot look at a real claim, a policy, a price list or a benefit decision. Please do not send Social Security numbers, policy numbers, service records or health details. Questions about a VA claim go to the VA, about the Social Security payment to the Social Security Administration, and about a policy to the insurer or your state’s insurance department. A complaint about a funeral home can go to the Federal Trade Commission and to the state board that licenses funeral directors.</p>
+    <h2>Embedding the calculator</h2>
+    <p>Veterans’ organizations, senior centers, hospices, churches and personal finance writers can show the funeral cost calculator in an iframe at no cost. The code and the conditions are on the <a href={route('widget', lang)}>embed page</a>.</p>
+    <h2>Publisher</h2>
+    <LegalIdentity lang={lang} />
+    <p class="text-sm">Last updated: {LAST_UPDATED}.</p>
+  </div>
+</PageLayout>

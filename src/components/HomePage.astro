@@ -1,0 +1,170 @@
+---
+/**
+ * Home: the funeral gap calculator on the first screen, then the reference page (RECETTE §5, §21): what
+ * death-care businesses take in per death in each state (Census 2022), the funeral price index (BLS),
+ * what the VA and Social Security pay, three cases worked through, how families pay, and the limits.
+ * Every figure comes from the engine or the parameter file.
+ */
+import PageLayout from '../layouts/PageLayout.astro';
+import Tool from './Tool.astro';
+import Sources from './Sources.astro';
+import { route } from '../i18n/routes';
+import { PAGES } from '../lib/guides';
+import { groupLabel, GROUPS_ORDER } from '../i18n/nav';
+import { helpers } from '../lib/helpers';
+import { LAST_UPDATED, AUTHOR_NAME } from '../data/site-config';
+import { displayDate } from '../lib/format';
+import { faqSchema, webApplicationSchema, websiteSchema, organizationSchema } from '../lib/seo';
+const lang = 'en';
+const h = helpers(true);
+const { P, E, m, pc } = h;
+
+// The calculator's own default case, so the text matches what the reader sees first.
+const DEF = { state: 'TX' as const, age: 65, sex: 'f' as const, veteran: 'none' as const, ssa: true, saved: 3000, cover: 0 };
+const def = E.funeralGap(DEF);
+const us22 = E.spendPerDeath('US');
+const usNow = E.spendToday('US');
+const tx = E.spendToday('TX');
+const rank = E.ranking();
+const top = rank.slice(0, 10), bottom = rank.slice(-10).reverse();
+const rowOf = (x: { s: (typeof E.STATES)[number]; v: number }) => [E.stateName(x.s), m(E.spendToday(x.s).all as number), m(x.v), h.num(E.spendPerDeath(x.s).deathsPerEstablishment ?? 0)];
+const hiLo = (rank[0].v / rank[rank.length - 1].v);
+const nonSvc = E.vaAllowance('nonService'), svc = E.vaAllowance('service');
+const trend = E.funeralTrend(), allTrend = E.allItemsTrend();
+const yoy = E.funeralYoY();
+const longF = E.funeralAnnual(E.lastFullYear) / E.funeralAnnual(E.firstYear) - 1;
+const longA = E.allItemsAnnual(E.lastFullYear) / E.allItemsAnnual(E.firstYear) - 1;
+const cpiYears = [E.firstYear, 1995, 2000, 2005, 2010, 2015, 2020, 2022, E.lastFullYear];
+const cpiRows = cpiYears.map((y) => [String(y), h.num1(E.funeralAnnual(y)), m(E.toToday(1000, y)), pc(E.funeralAnnual(E.lastFullYear) / E.funeralAnnual(y) - 1), pc(E.allItemsAnnual(E.lastFullYear) / E.allItemsAnnual(y) - 1)]);
+
+// Three cases.
+const cases = [
+  { who: 'Widow of 78 in Pennsylvania, no veteran in the family', what: '$6,000 in a payable-on-death account, no policy, a child who can claim nothing from Social Security.',
+    r: E.funeralGap({ state: 'PA', age: 78, sex: 'f', veteran: 'none', ssa: false, saved: 6000, cover: 0 }), st: 'PA' as const },
+  { who: 'Married veteran of 72 in North Carolina', what: 'Death not service-connected, a spouse who gets the Social Security lump sum, a $10,000 final expense policy, nothing set aside.',
+    r: E.funeralGap({ state: 'NC', age: 72, sex: 'm', veteran: 'nonService', ssa: true, saved: 0, cover: 10000 }), st: 'NC' as const },
+  { who: 'Single man of 58 in California', what: 'No spouse or child at home, $2,000 of savings, $50,000 of group life cover at work that ends when he retires.',
+    r: E.funeralGap({ state: 'CA', age: 58, sex: 'm', veteran: 'none', ssa: false, saved: 2000, cover: 0 }), st: 'CA' as const },
+];
+
+const nSrc = Object.keys(P.sources).length;
+const faqs = [
+  { q: 'What is the average cost of a funeral in the United States?', a: `Funeral homes, cemeteries and crematories took in ${m(us22.all as number)} per death in 2022, from the Census Bureau’s count of their revenue divided by the deaths of that year. Brought forward with the BLS funeral price index, that is about ${m(usNow.all as number)} in ${h.month}. It averages every kind of funeral, from a direct cremation to a full burial, so a single quote can sit well above or below it.` },
+  { q: 'Which state has the most expensive funerals?', a: `On spending per death, ${E.stateName(rank[0].s)} comes first at ${m(E.spendToday(rank[0].s).all as number)} today, and ${E.stateName(rank[rank.length - 1].s)} last at ${m(E.spendToday(rank[rank.length - 1].s).all as number)}. The gap partly reflects prices and partly habits: states where cremation is common spend less per death, and cemetery sales made in advance count in the year they are made.` },
+  { q: 'Does the government pay for a funeral?', a: `Not in general. Social Security pays a one-time ${m(P.ssa.lumpSum)} to a surviving spouse or an eligible child. The VA pays up to ${m(svc.burial)} toward the funeral of a veteran whose death was service-connected, and otherwise ${m(nonSvc.burial)} plus ${m(nonSvc.plot)} for a plot when the veteran met one of its conditions, for deaths on or after ${h.D.vaFrom}. Some counties and states help with indigent burials.` },
+  { q: 'How much should I set aside for my own funeral?', a: `Start from the figure for your state, carry it to the age you are likely to reach, then take off what you already have. A woman of ${DEF.age} in Texas has even odds of living past ${h.num1(def.median)}; at funeral prices rising ${pc(trend, 1)} a year, today’s ${m(def.today)} becomes about ${m(def.future)} by then. The calculator does the sum with your own state, age and savings.` },
+  { q: 'Is it cheaper to prepay a funeral?', a: 'It can be, because a prepaid contract fixes the price of what it lists, and funeral prices keep rising. The trade is that the money is tied to one funeral home under state rules that vary, and items outside the contract are still paid at the later price. Setting money aside in a payable-on-death account keeps it flexible. The prepaid page compares the two with your own figures.' },
+  { q: 'Do I have to give my phone number to use the calculator?', a: 'No. There is no form, no account and no callback. Everything runs in your browser and nothing you type is sent anywhere: the address bar only changes if you copy a link to share your own figures. The site has nothing to sell and passes no details to insurers, brokers or funeral homes.' },
+];
+const jsonLd = [webApplicationSchema({ name: 'Funeral cost calculator by state', description: 'Funeral and cemetery spending per death in each state, carried to the likely age of death, after the VA allowance and the Social Security payment.', path: route('home', lang), lang }), websiteSchema(lang), organizationSchema(lang), faqSchema(faqs, lang)];
+const groups = GROUPS_ORDER.map((g) => ({ g, pages: PAGES.filter((p) => p.group === g) })).filter((x) => x.pages.length);
+---
+<PageLayout title="Funeral Cost by State 2026: Calculator After VA and SSA" description="Funeral cost by state for 2026: what a funeral costs where you live, at the age you will likely reach, after the VA burial allowance and Social Security’s $255." lang={lang} jsonLd={jsonLd} faqs={faqs}>
+  <header class="mb-3">
+    <h1 class="text-[1.75rem] font-bold text-navy-900 max-sm:leading-tight sm:text-3xl md:text-4xl">Funeral costs by state: what it will cost where you live, and what is already paid</h1>
+    <p class="mt-2 text-base text-navy-700 sm:text-lg">Your state, your age, your savings and cover, against public figures from the Census Bureau, the BLS and the VA. No quote form, no phone call, no prices from funeral homes.</p>
+    <p class="mt-1 text-xs text-navy-600">Independent site, not an insurer or a broker, and not a funeral home or a government agency.</p>
+  </header>
+  <div data-outil class="mb-4"><Tool tool={{ kind: 'funeral' }} primary={true} /></div>
+  <p class="mb-8 text-sm text-navy-600">Census, BLS, NCHS and VA figures, updated <time datetime={LAST_UPDATED}>{displayDate(LAST_UPDATED, 'en-US')}</time> · {AUTHOR_NAME} · <a href={route('method', lang)} class="underline hover:text-navy-900">How the figures are worked out</a> · <a href={route('about', lang)} class="underline hover:text-navy-900">Who publishes this site</a></p>
+
+  <div class="prose prose-slate max-w-none">
+    <p>The case loaded above is a woman of {DEF.age} in Texas with {m(DEF.saved)} put aside and no policy. Funeral homes, cemeteries and crematories in Texas took in {m(E.spendPerDeath('TX').all as number)} per death in 2022, which the BLS funeral price index brings to {m(tx.all as number)} in {h.month}. Half the women of her age in Texas live past {h.num1(def.median)}, on the state life table of the National Center for Health Statistics, so the bill is most likely to fall about {h.num(def.years)} years from now. At the {pc(trend, 1)} a year that funeral prices rose between {P.cpi.trendFrom} and {P.cpi.trendTo}, the same spending would then come to about {m(def.future)}. Her husband or a dependent child would receive the {m(P.ssa.lumpSum)} lump-sum death payment from Social Security; with her savings, that leaves {m(def.gapFuture)} for someone to find, or {m(def.gapToday)} if it happened today. Change any field and every line moves.</p>
+    <p>Most pages that answer “how much does a funeral cost” print one national figure from an industry survey, or a range with no source, and then a button to get a quote, prepay a plan or buy a policy. The figure on this site is built from public data for every state, carried to the year it will matter, and set against the two payments the federal government already makes, which those pages mention without an amount, if at all. It asks for no name, ZIP code, e-mail or phone number.</p>
+  </div>
+
+  <section class="not-prose my-10" aria-labelledby="states-title">
+    <h2 id="states-title" class="text-2xl font-bold text-navy-900">Where a death costs the most and the least</h2>
+    <p class="mt-2 text-navy-800">Revenue of death-care businesses per death, ten highest and ten lowest of the 50 states and the District of Columbia. The highest is {h.num1(hiLo)} times the lowest.</p>
+    <div class="mt-4 grid gap-6 lg:grid-cols-2">
+      <Fragment set:html={h.table(['Highest', `Per death, ${h.month}`, '2022', 'Deaths per business'], top.map(rowOf), 'Census Bureau, 2022 Economic Census (NAICS 8122) and population estimates; BLS funeral index.', ['l', 'r', 'r', 'r'])} />
+      <Fragment set:html={h.table(['Lowest', `Per death, ${h.month}`, '2022', 'Deaths per business'], bottom.map(rowOf), 'Same sources. All 51 rows are on the state table page.', ['l', 'r', 'r', 'r'])} />
+    </div>
+    <p class="mt-2 text-sm text-navy-700">The full table, with funeral homes and cemeteries apart, is on the <a href={route('funeral-costs-by-state', lang)} class="underline">average funeral cost by state</a> page.</p>
+  </section>
+
+  <div class="prose prose-slate max-w-none">
+    <h2>What “spending per death” counts</h2>
+    <p>Every five years the Census Bureau counts the revenue of the country’s employer businesses, by industry and by state. The 2022 Economic Census found {h.num(us22.establishments ?? 0)} death-care establishments (industry 8122: funeral homes and funeral services, cemeteries and crematories) and a total revenue of {m(E.spendPerDeath('US').all as number * us22.deaths / 1e9)} billion, against about {h.num(Math.round(us22.deaths / 1000) * 1000)} deaths that year. Dividing one by the other gives {m(us22.all as number)} per death: {m(us22.homes as number)} at funeral homes and {m(us22.cemeteries as number)} at cemeteries and crematories. This is what was actually paid, by all buyers, for all kinds of funerals, not a list price.</p>
+    <p>Three things push the figure away from the bill of any one family. First, it is an average across a direct cremation with no service and a full burial with a casket, a vault, a plot and a headstone; the price list of a funeral home will show both ends. Second, revenue is booked in the year of the sale, and cemeteries sell plots and pre-need contracts years in advance, so a state where many people buy ahead looks more expensive per death. Third, revenue is counted where the business sits, so a family that buys across a state line moves the figure with it. The Census withholds some figures to protect the identity of firms: for Alaska and Wyoming the split between funeral homes and cemeteries is not published, only the total.</p>
+    <p>The figure is then brought from 2022 to today with the Consumer Price Index for funeral expenses, which the Bureau of Labor Statistics has published every month since December 1986. It rose {pc(yoy.funeral, 1)} in the twelve months to {h.month}, against {pc(yoy.all, 1)} for all consumer prices.</p>
+  </div>
+
+  <section class="not-prose my-10" aria-labelledby="gov-title">
+    <h2 id="gov-title" class="text-2xl font-bold text-navy-900">What the federal government pays</h2>
+    <div class="mt-5 grid gap-4 md:grid-cols-3">
+      <div class="border-t-4 border-accent-600 bg-accent-50 p-4"><p class="text-sm font-semibold text-navy-700">Veteran, service-connected death</p><p class="tabular-nums mt-1 text-3xl font-bold text-navy-900">{m(svc.burial)}</p><p class="mt-2 text-sm text-navy-800">Burial allowance for a death on or after September 11, 2001; {m(P.va.serviceConnectedBefore2001)} before. No time limit to claim.</p></div>
+      <div class="border-t-4 border-navy-400 bg-navy-50 p-4"><p class="text-sm font-semibold text-navy-700">Veteran, death not service-connected</p><p class="tabular-nums mt-1 text-3xl font-bold text-navy-900">{m(nonSvc.total)}</p><p class="mt-2 text-sm text-navy-800">{m(nonSvc.burial)} burial plus {m(nonSvc.plot)} plot or interment, for a death on or after {h.D.vaFrom}, when one of the VA’s conditions is met.</p></div>
+      <div class="border-t-4 border-navy-400 bg-navy-50 p-4"><p class="text-sm font-semibold text-navy-700">Social Security lump sum</p><p class="tabular-nums mt-1 text-3xl font-bold text-navy-900">{m(P.ssa.lumpSum)}</p><p class="mt-2 text-sm text-navy-800">Once, to a spouse who lived with the worker or gets benefits on the record, or else to an eligible child. Claim within {P.ssa.claimYears} years.</p></div>
+    </div>
+    <p class="mt-4 text-sm text-navy-700">VA amounts from va.gov, page updated {h.date(P.va.pageUpdated)}; the non-service-connected amounts change every October 1. Social Security payment from 20 CFR 404.390 to 404.392 on the eCFR. Neither is paid to a funeral home on its own initiative: someone must claim.</p>
+  </section>
+
+  <div class="prose prose-slate max-w-none">
+    <h2>What those payments cover, and what they do not</h2>
+    <p>Put together, the two federal payments rarely cover more than a fraction of a funeral. For a veteran whose death was not service-connected, {m(nonSvc.total + P.ssa.lumpSum)} with the Social Security payment comes to {pc((nonSvc.total + P.ssa.lumpSum) / (usNow.all as number))} of the national spending per death today. For a service-connected death, {m(svc.burial + P.ssa.lumpSum)} is about {pc((svc.burial + P.ssa.lumpSum) / (usNow.all as number))}. A veteran may also be buried in a VA national cemetery, and the VA furnishes headstones and markers, which can take the plot and the stone off the bill; the <Fragment set:html={h.a('va-burial-benefits', 'VA burial benefits page')} /> sets out the conditions and every rate since 2013. The {m(P.ssa.lumpSum)} is a fixed amount written into the regulation, with no adjustment for prices, so it buys a little less every year.</p>
+    <p>Everything else comes from the family: savings, a payable-on-death bank account, the estate, a <Fragment set:html={h.a('prepaid-funeral', 'prepaid funeral contract')} />, a <Fragment set:html={h.a('final-expense-insurance', 'final expense policy')} /> or a life insurance payout. The calculator counts savings and cover held as the same thing, money available when it is needed. It is not quite true: a policy pays within days or weeks of a claim, while an estate can take months to settle, and a funeral home often wants a deposit before the service.</p>
+  </div>
+
+  <section class="not-prose my-10" aria-labelledby="cpi-title">
+    <h2 id="cpi-title" class="text-2xl font-bold text-navy-900">Funeral prices since 1987</h2>
+    <p class="mt-2 text-navy-800">Annual average of the BLS index for funeral expenses (December 1986 = 100), what $1,000 of funeral spending in that year buys at {h.month} prices, and the rise to {E.lastFullYear} against all consumer prices.</p>
+    <Fragment set:html={h.table(['Year', 'Funeral index', `$1,000 then, in ${h.month}`, `Funeral prices to ${E.lastFullYear}`, 'All prices, same years'], cpiRows, 'BLS CPI-U, U.S. city average, not seasonally adjusted: funeral expenses (CUUR0000SEGD02) and all items (CUUR0000SA0).', ['l', 'r', 'r', 'r', 'r'])} />
+  </section>
+
+  <div class="prose prose-slate max-w-none">
+    <p>Over the whole series, funeral prices rose {pc(longF)} from {E.firstYear} to {E.lastFullYear}, against {pc(longA)} for all consumer prices: they {longF > longA ? 'outran' : 'trailed'} general inflation. Over the last ten full years the order {trend < allTrend ? 'reversed' : 'held'}: {pc(trend, 1)} a year for funerals against {pc(allTrend, 1)} for everything. The calculator uses the ten-year funeral rate by default, and lets you set your own. A fixed sum set aside today, or a policy with a fixed face amount, loses value at that rate; the <Fragment set:html={h.a('funeral-cost-inflation', 'funeral inflation calculator')} /> shows what an old bill or an old policy is worth now.</p>
+
+    <h2>How long the money has to wait</h2>
+    <p>The other half of the sum is time. The calculator takes the median age at death, the age that half the people of your age and sex in your state live past, from the life tables of the National Center for Health Statistics. For a woman of {DEF.age} in Texas it is {h.num1(def.median)}; for a man of the same age in the United States as a whole it is {h.num1(E.medianAgeAtDeath(65, 'm'))}. The tables describe the whole population at today’s death rates, with no forecast of future improvement. A quarter of people live well past the median, which matters for anyone paying premiums: the longer the wait, the more a policy costs in total and the more a fixed sum loses to rising prices. The <Fragment set:html={h.a('life-insurance-for-seniors', 'cover after 60 page')} /> gives the full spread by age.</p>
+  </div>
+
+  <section class="not-prose my-10" aria-labelledby="cases-title">
+    <h2 id="cases-title" class="text-2xl font-bold text-navy-900">Three families, worked through</h2>
+    <div class="mt-5 grid gap-5 lg:grid-cols-3">
+      {cases.map((c) => (
+        <div class="border border-navy-200 p-4">
+          <p class="font-semibold text-navy-900">{c.who}</p>
+          <p class="mt-1 text-sm text-navy-700">{c.what}</p>
+          <dl class="mt-3 grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 text-sm">
+            <dt class="text-navy-700">Spending per death today</dt><dd class="tabular-nums text-right text-navy-900">{m(c.r.today)}</dd>
+            <dt class="text-navy-700">Median age at death</dt><dd class="tabular-nums text-right text-navy-900">{h.num1(c.r.median)}</dd>
+            <dt class="text-navy-700">Same spending by then</dt><dd class="tabular-nums text-right text-navy-900">{m(c.r.future)}</dd>
+            <dt class="text-navy-700">VA and Social Security</dt><dd class="tabular-nums text-right text-navy-900">{c.r.va + c.r.ssa > 0 ? m(c.r.va + c.r.ssa) : 'none'}</dd>
+            <dt class="font-semibold text-navy-900">Left to find</dt><dd class="tabular-nums text-right font-semibold text-navy-900">{m(c.r.gapFuture)}</dd>
+          </dl>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <div class="prose prose-slate max-w-none">
+    <p>The widow in Pennsylvania has money set aside, but already less than her state spends per death today, and by {h.num1(cases[0].r.median)} the gap will have grown, and her adult child cannot claim the Social Security payment, which goes only to a spouse or to a child who could get benefits on the record. The veteran in North Carolina gets the VA burial and plot allowances if he meets one of the VA’s conditions, such as receiving a VA pension or compensation, and his final expense policy carries most of the rest, though its fixed face amount will cover less each year. The man in California has the gap the calculator shows because his group cover at work is not counted: it ends when he leaves the job, and a funeral is most likely decades after he retires.</p>
+
+    <h2>Your rights when you buy a funeral</h2>
+    <p>The FTC Funeral Rule (16 CFR Part 453) applies to every funeral provider in the country. A funeral home must give prices by phone if asked and hand you a written General Price List when you discuss arrangements in person. You may buy only the goods and services you want, apart from a basic services fee and anything a law requires; the home may not make you buy a casket from it, or charge you for using one bought elsewhere, and if it offers direct cremation it must offer an alternative container. It may not say embalming is required when the law does not require it. Before you pay, you get an itemized statement of what you chose. The <Fragment set:html={h.a('funeral-rule', 'price list page')} /> explains each rule and has a calculator to compare a package with the items bought one by one.</p>
+
+    <h2>Ways families pay, side by side</h2>
+    <p>Savings and a payable-on-death account cost nothing and keep the choice open, but are spent first in an emergency. A <Fragment set:html={h.a('prepaid-funeral', 'prepaid contract')} /> fixes the price of what it lists and ties the money to one provider. A <Fragment set:html={h.a('final-expense-insurance', 'final expense')} /> or <Fragment set:html={h.a('burial-insurance', 'burial insurance')} /> policy pays a fixed sum for a monthly premium, and the question is how many years of premiums it takes to pay in the face amount; the <Fragment set:html={h.a('burial-insurance-no-waiting-period', 'waiting period page')} /> explains what a graded policy pays in its first years. A term or whole life policy bought for a family’s income can cover the funeral too: the <Fragment set:html={h.a('how-much-life-insurance', 'DIME calculator')} /> adds it to the rest. This site sells none of them and shows no premiums: each calculator uses the quote you type.</p>
+
+    <h2>What this calculator leaves out</h2>
+    <p>It does not price a funeral: it gives the average spending of your state, which you can replace with the total from a price list in the second panel. It does not include flowers, travel, a reception or the death certificates the family orders, unless the funeral home bills them. It does not count county or state help for indigent burials, a union or employer death benefit, or Social Security survivor benefits, which replace income rather than pay for a funeral. It assumes savings earn nothing, and that the funeral happens at the median age. These limits are set out on the <a href={route('method', lang)}>method page</a>.</p>
+  </div>
+
+  <div class="prose prose-slate max-w-none">
+    <Sources lang={lang} intro="The spending per death, the funeral price index, the life tables and the VA and Social Security amounts above come from these Census, BLS, NCHS, VA and eCFR pages, last read on" />
+    <p>The parameter file cites {nSrc} pages: the Census Bureau’s <Fragment set:html={h.src('census_ec', '2022 Economic Census data files')} /> and <Fragment set:html={h.src('census_pop', 'population estimates')} />, the NCHS <Fragment set:html={h.src('nchs_states', 'state life tables')} />, the BLS <Fragment set:html={h.src('bls_cpi', 'funeral price index')} />, the VA’s <Fragment set:html={h.src('va_burial', 'burial allowance page')} />, the <Fragment set:html={h.src('ftc_rule', 'FTC Funeral Rule')} /> and the <Fragment set:html={h.src('ssa_cfr', 'Social Security regulation')} /> on the eCFR. The engine is tested on every build against hand-checked cases.</p>
+  </div>
+
+  <section class="mt-12" aria-labelledby="guides-title">
+    <h2 id="guides-title" class="text-2xl font-bold text-navy-900">Every calculator on the site</h2>
+    <div class="mt-4 space-y-6">
+      {groups.map(({ g, pages }) => (
+        <div class="grid gap-2 md:grid-cols-[12rem_minmax(0,1fr)] md:gap-6">
+          <h3 class="text-sm font-semibold uppercase tracking-wide text-navy-600">{groupLabel(g)}</h3>
+          <ul class="space-y-2">{pages.map((p) => <li><a href={route(p.id, lang)} class="font-medium text-accent-700 underline-offset-2 hover:underline">{p.nav}</a> <span class="text-sm text-navy-600">{p.card}</span></li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+</PageLayout>

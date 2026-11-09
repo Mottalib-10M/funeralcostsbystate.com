@@ -1,0 +1,390 @@
+{
+  "year": 2026,
+  "retrieved_at": "2026-11-07",
+  "valid_from": "2026-01-01",
+  "valid_to": "2026-12-31",
+  "source": "VA burial allowance and VGLI pages, eCFR (16 CFR Part 453, 20 CFR 404.390), IRS Publication 15-B (2026), IRS Publication 525, IRS estate and gift tax pages, Form 706 instructions; data files from the Census Bureau, NCHS and BLS (see src/data).",
+  "source_url": "https://www.va.gov/burials-memorials/veterans-burial-allowance/",
+  "va": {
+    "pageUpdated": "2026-10-30",
+    "serviceConnected": 2000,
+    "serviceConnectedBefore2001": 1500,
+    "serviceConnectedCutoff": "2001-09-11",
+    "nonService": [
+      {
+        "from": "2026-10-01",
+        "burial": 1032,
+        "plot": 1032
+      },
+      {
+        "from": "2025-10-01",
+        "burial": 1002,
+        "plot": 1002
+      },
+      {
+        "from": "2024-10-01",
+        "burial": 978,
+        "plot": 978
+      },
+      {
+        "from": "2023-10-01",
+        "burial": 948,
+        "plot": 948
+      },
+      {
+        "from": "2023-01-05",
+        "burial": 893,
+        "plot": 893
+      },
+      {
+        "from": "2022-10-01",
+        "burial": 300,
+        "plot": 893
+      },
+      {
+        "from": "2021-10-01",
+        "burial": 300,
+        "plot": 828
+      },
+      {
+        "from": "2020-10-01",
+        "burial": 300,
+        "plot": 807
+      },
+      {
+        "from": "2019-10-01",
+        "burial": 300,
+        "plot": 796
+      },
+      {
+        "from": "2018-10-01",
+        "burial": 300,
+        "plot": 780
+      },
+      {
+        "from": "2017-10-01",
+        "burial": 300,
+        "plot": 762
+      },
+      {
+        "from": "2016-10-01",
+        "burial": 300,
+        "plot": 749
+      },
+      {
+        "from": "2015-10-01",
+        "burial": 300,
+        "plot": 747
+      },
+      {
+        "from": "2014-10-01",
+        "burial": 300,
+        "plot": 745
+      },
+      {
+        "from": "2013-10-01",
+        "burial": 300,
+        "plot": 734
+      }
+    ],
+    "headstone": [
+      {
+        "from": "2026-10-01",
+        "amount": 420
+      },
+      {
+        "from": "2025-10-01",
+        "amount": 441
+      },
+      {
+        "from": "2024-10-01",
+        "amount": 371
+      }
+    ],
+    "nonServiceVaCare": [
+      {
+        "from": "2022-10-01",
+        "burial": 893,
+        "plot": 893
+      },
+      {
+        "from": "2021-10-01",
+        "burial": 828,
+        "plot": 828
+      },
+      {
+        "from": "2020-10-01",
+        "burial": 807,
+        "plot": 807
+      },
+      {
+        "from": "2019-10-01",
+        "burial": 796,
+        "plot": 796
+      },
+      {
+        "from": "2018-10-01",
+        "burial": 780,
+        "plot": 780
+      },
+      {
+        "from": "2017-10-01",
+        "burial": 762,
+        "plot": 762
+      },
+      {
+        "from": "2016-10-01",
+        "burial": 749,
+        "plot": 749
+      },
+      {
+        "from": "2015-10-01",
+        "burial": 747,
+        "plot": 747
+      },
+      {
+        "from": "2014-10-01",
+        "burial": 745,
+        "plot": 745
+      },
+      {
+        "from": "2013-10-01",
+        "burial": 734,
+        "plot": 734
+      }
+    ],
+    "note": "nonService: table \"Burial allowance amounts for a non-service-connected death\"; nonServiceVaCare: table \"... if the Veteran was hospitalized by VA at the time of their death\", used before 2023-01-05 only (identical amounts from that date). va.gov page updated 2026-10-30, reread 2026-11-07.",
+    "vaCareSameFrom": "2023-01-05",
+    "claimYearsNonService": 2
+  },
+  "ssa": {
+    "lumpSum": 255,
+    "claimYears": 2
+  },
+  "vgli": {
+    "asOf": "2025-07-01",
+    "pageUpdated": "2026-10-13",
+    "max": 500000,
+    "bands": [
+      {
+        "from": 0,
+        "to": 29,
+        "per10k": 0.6
+      },
+      {
+        "from": 30,
+        "to": 34,
+        "per10k": 0.8
+      },
+      {
+        "from": 35,
+        "to": 39,
+        "per10k": 1.0
+      },
+      {
+        "from": 40,
+        "to": 44,
+        "per10k": 1.4
+      },
+      {
+        "from": 45,
+        "to": 49,
+        "per10k": 1.9
+      },
+      {
+        "from": 50,
+        "to": 54,
+        "per10k": 2.9
+      },
+      {
+        "from": 55,
+        "to": 59,
+        "per10k": 5.0
+      },
+      {
+        "from": 60,
+        "to": 64,
+        "per10k": 8.5
+      },
+      {
+        "from": 65,
+        "to": 69,
+        "per10k": 13.8
+      },
+      {
+        "from": 70,
+        "to": 74,
+        "per10k": 21.5
+      },
+      {
+        "from": 75,
+        "to": 79,
+        "per10k": 38.5
+      },
+      {
+        "from": 80,
+        "to": 200,
+        "per10k": 44.0
+      }
+    ]
+  },
+  "irsTable22": {
+    "exclusion": 50000,
+    "bands": [
+      {
+        "from": 0,
+        "to": 24,
+        "cost": 0.05
+      },
+      {
+        "from": 25,
+        "to": 29,
+        "cost": 0.06
+      },
+      {
+        "from": 30,
+        "to": 34,
+        "cost": 0.08
+      },
+      {
+        "from": 35,
+        "to": 39,
+        "cost": 0.09
+      },
+      {
+        "from": 40,
+        "to": 44,
+        "cost": 0.1
+      },
+      {
+        "from": 45,
+        "to": 49,
+        "cost": 0.15
+      },
+      {
+        "from": 50,
+        "to": 54,
+        "cost": 0.23
+      },
+      {
+        "from": 55,
+        "to": 59,
+        "cost": 0.43
+      },
+      {
+        "from": 60,
+        "to": 64,
+        "cost": 0.66
+      },
+      {
+        "from": 65,
+        "to": 69,
+        "cost": 1.27
+      },
+      {
+        "from": 70,
+        "to": 200,
+        "cost": 2.06
+      }
+    ]
+  },
+  "estate": {
+    "basicExclusion": 15000000,
+    "annualGiftExclusion": 19000,
+    "topRate": 0.4,
+    "topBracketFrom": 1000000,
+    "topBracketBase": 345800,
+    "lookbackYears": 3
+  },
+  "cpi": {
+    "baseYear": 2022,
+    "trendFrom": 2015,
+    "trendTo": 2025
+  },
+  "sources": {
+    "census_ec": {
+      "label": {
+        "en": "Census Bureau, 2022 Economic Census, sector 81 data files (EC2281BASIC, death care services)"
+      },
+      "url": "https://www2.census.gov/programs-surveys/economic-census/data/2022/sector81/"
+    },
+    "census_pop": {
+      "label": {
+        "en": "Census Bureau, Vintage 2024 state population totals and components of change (NST-EST2024-ALLDATA)"
+      },
+      "url": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2024/state/totals/"
+    },
+    "nchs_us": {
+      "label": {
+        "en": "NCHS, United States Life Tables, 2024 (NVSR vol. 75 no. 5)"
+      },
+      "url": "https://www.cdc.gov/nchs/data/nvsr/nvsr75/nvsr75-05.pdf"
+    },
+    "nchs_states": {
+      "label": {
+        "en": "NCHS, U.S. State Life Tables, 2022 (NVSR vol. 74 no. 12)"
+      },
+      "url": "https://www.cdc.gov/nchs/data/nvsr/nvsr74/nvsr74-12.pdf"
+    },
+    "nchs_ftp": {
+      "label": {
+        "en": "NCHS, life table data files (state and national tables in Excel)"
+      },
+      "url": "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Publications/NVSR/74-12/"
+    },
+    "bls_cpi": {
+      "label": {
+        "en": "BLS, CPI-U funeral expenses, U.S. city average (series CUUR0000SEGD02)"
+      },
+      "url": "https://data.bls.gov/timeseries/CUUR0000SEGD02"
+    },
+    "ftc_rule": {
+      "label": {
+        "en": "16 CFR Part 453, Funeral Industry Practices (FTC Funeral Rule), eCFR"
+      },
+      "url": "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-D/part-453"
+    },
+    "va_burial": {
+      "label": {
+        "en": "VA, Veterans burial allowance and transportation benefits"
+      },
+      "url": "https://www.va.gov/burials-memorials/veterans-burial-allowance/"
+    },
+    "va_vgli": {
+      "label": {
+        "en": "VA, Veterans' Group Life Insurance (VGLI) premium rates"
+      },
+      "url": "https://www.va.gov/life-insurance/options-eligibility/vgli/"
+    },
+    "ssa_cfr": {
+      "label": {
+        "en": "20 CFR 404.390, Social Security lump-sum death payment, eCFR"
+      },
+      "url": "https://www.ecfr.gov/current/title-20/chapter-III/part-404/section-404.390"
+    },
+    "irs_15b": {
+      "label": {
+        "en": "IRS Publication 15-B (2026), group-term life insurance coverage, Table 2-2"
+      },
+      "url": "https://www.irs.gov/publications/p15b"
+    },
+    "irs_525": {
+      "label": {
+        "en": "IRS Publication 525, life insurance proceeds and surrender of a policy for cash"
+      },
+      "url": "https://www.irs.gov/publications/p525"
+    },
+    "irs_estate": {
+      "label": {
+        "en": "IRS, What's new: estate and gift tax (2026 basic exclusion)"
+      },
+      "url": "https://www.irs.gov/businesses/small-businesses-self-employed/whats-new-estate-and-gift-tax"
+    },
+    "irs_706": {
+      "label": {
+        "en": "IRS, Instructions for Form 706 (Schedule D, Table A unified rate schedule)"
+      },
+      "url": "https://www.irs.gov/instructions/i706"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+---
+/** Embeddable calculator (iframe): no navigation, noindex, out of the sitemap (astro.config). */
+import '../../styles/global.css';
+import FuneralCalc from '../../components/calc/FuneralCalc';
+import { SITE_URL, SITE_NAMES } from '../../data/site-config';
+import { route } from '../../i18n/routes';
+import { t } from '../../i18n/ui';
+---
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Funeral cost calculator by state (widget)</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={`${SITE_URL}/en/`} />
+  </head>
+  <body class="bg-white p-2 text-navy-900">
+    <FuneralCalc client:load methodHref={`${SITE_URL}${route('method', 'en')}`} idPrefix="w" />
+    <p class="mt-2 text-center text-xs text-navy-600"><a href={`${SITE_URL}/en/`} target="_blank" rel="noopener" class="underline">{SITE_NAMES.en}</a> · Independent tool by Radif Partners, not an insurer, a broker, a funeral home or a government agency · worked out in your browser</p>
+    <p class="mt-1 text-center text-xs text-navy-600">{t('en').attribution}</p>
+  </body>
+</html>

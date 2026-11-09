@@ -1,0 +1,32 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+import { LAST_UPDATED, AUTHOR_NAME, CONTACT_EMAIL, AUTHOR_ROLE } from '../../data/site-config';
+import { route } from '../../i18n/routes';
+import { personSchema, organizationSchema, breadcrumbSchema, profilePageSchema } from '../../lib/seo';
+import { displayDate } from '../../lib/format';
+import { PAGES } from '../../lib/guides';
+import { helpers } from '../../lib/helpers';
+const lang = 'en';
+const h = helpers(true);
+const n = PAGES.length + 3;
+const nSrc = Object.keys(h.P.sources).length;
+---
+<PageLayout title="Funeral Costs by State: who works out these funeral sums" description="Who publishes Funeral Costs by State, why it builds costs from Census, BLS and NCHS data instead of quotes, and where its VA, SSA and IRS figures come from." lang={lang} jsonLd={[personSchema(lang), organizationSchema(lang), profilePageSchema({ path: route('about', lang), lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'About', path: route('about', lang) }])]} breadcrumbs={[{ label: 'About' }]}>
+  <header class="mb-6"><p class="kicker">About</p><h1 class="mt-1 text-3xl font-bold text-navy-900 md:text-4xl">Who works out the figures on Funeral Costs by State</h1></header>
+  <div class="prose prose-slate max-w-none">
+    <div class="not-prose mb-6"><p class="text-lg font-semibold text-navy-900">{AUTHOR_NAME}</p><p class="text-navy-700">{AUTHOR_ROLE[lang]}</p></div>
+    <p>Funeral Costs by State is published by Radif Partners, a company that builds free calculators on public data. It is for people in the United States who are planning or paying for a funeral, or deciding whether to buy a policy to pay for one: someone in their sixties weighing a final expense offer seen on television, the child of a veteran sorting out what the VA will pay, a family comparing two price lists.</p>
+    <h2>Why this site exists</h2>
+    <p>Search for the cost of a funeral and most pages give one national figure from an industry survey, or a range with no source, then a button to get a quote, prepay a plan or buy a policy. Broker pages ask for a ZIP code, a phone number or an e-mail before any price. Hardly any of them say how much the VA or Social Security pays, or what the figure will be by the time it is needed.</p>
+    <p>So this site does the opposite. It builds the cost of a death in each state from what funeral homes, cemeteries and crematories actually took in, counted by the Census Bureau, carries it forward with the BLS funeral price index to the age the NCHS life tables say you are likely to reach, and takes off the federal payments. Insurance pages judge a policy on the premium you type. We show no prices from insurers or funeral homes, because we found none that a website is allowed to republish, and a figure we cannot trace is not one we print.</p>
+    <h2>Where the figures come from</h2>
+    <p>Death-care revenue and deaths from the Census Bureau; funeral prices from the Bureau of Labor Statistics; life tables from the CDC’s National Center for Health Statistics; burial allowances and VGLI rates from the VA; the Social Security payment and the FTC Funeral Rule from the eCFR; tax rules from the IRS. The parameter file cites {nSrc} pages, all read on {displayDate(h.P.retrieved_at, 'en-US')}. The <a href={route('method', lang)}>method page</a> gives every formula and every limit.</p>
+    <h2>What we are not</h2>
+    <p>We are not an insurer, a broker, a funeral home, a cemetery or a government agency. We do not arrange insurance or funerals, we do not recommend a product or a provider, and nothing here is financial, tax or legal advice. Whether a policy suits you is for you and a licensed agent or adviser to judge; VA and Social Security claims are decided only by those agencies.</p>
+    <h2>How the site is paid for</h2>
+    <p>It is free and needs no account, no e-mail and no phone number. We sell no policies or funerals, take no commission and pass no details to anyone. If advertising is added one day it will never sit above a calculator, and it cannot use what you type, because nothing you type leaves your browser.</p>
+    <h2>Tell us when a figure is wrong</h2>
+    <p>Write to <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with the page, the values you entered and the source you rely on. The <a href={route('editorial', lang)}>editorial policy</a> explains how a correction is made. The site has {n} indexed pages, listed in the footer.</p>
+    <p class="text-sm text-navy-600">Figures last read on <time datetime={LAST_UPDATED}>{displayDate(LAST_UPDATED, 'en-US')}</time>.</p>
+  </div>
+</PageLayout>
