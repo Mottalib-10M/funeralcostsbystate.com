@@ -15,8 +15,8 @@ export default definePage({
   h1: 'Prepaid funeral plan, insurance or savings: which costs less',
   intro: 'Type the prepaid price you were quoted. The calculator grows it to the age you are likely to reach and works out what saving instead would take today.',
   resume: (h) => {
-    const r = h.E.medianAgeAtDeath(70, 'f'); const t = h.E.funeralTrend(); const price = Math.round(h.E.spendToday('US').homes as number);
-    const later = h.E.grow(price, t, r - 70);
+    const t = h.E.funeralTrend(); const price = Math.round(h.E.spendToday('US').homes as number);
+    const c = h.E.prepaidCase({ price, age: 70, sex: 'f', rate: 0.03 }); const r = c.median; const later = c.later;
     return `A prepaid funeral plan, also called a pre-need contract, buys a funeral from one provider at today’s price, paid in one sum or by installments. Its value depends on two numbers: how fast funeral prices rise, and how long the contract waits. On the BLS funeral index, prices rose ${h.pc(t, 1)} a year from ${h.P.cpi.trendFrom} to ${h.P.cpi.trendTo}. A woman of 70 has even odds of living past ${h.num1(r)} on the NCHS life table, so a funeral priced ${h.m(price)} today, the national funeral home spending per death, would cost about ${h.m(later)} by then. A prepaid contract that fixes that price is worth more than savings that earn less than the funeral trend after tax, and less than savings that earn more. Burial or final expense insurance is a third way: it pays a fixed sum that loses value as prices rise. The calculator compares the prepaid price with what you would need to set aside today at your own savings rate.`;
   },
   faqs: (h) => [
@@ -27,18 +27,20 @@ export default definePage({
   ],
   body: (h) => {
     const price = Math.round(h.E.spendToday('US').homes as number); const t = h.E.funeralTrend();
-    const rows = [60, 65, 70, 75, 80, 85].map((a) => { const med = h.E.medianAgeAtDeath(a, 'f'); const later = h.E.grow(price, t, med - a);
-      return [`${a}`, h.num1(med), h.m(later), h.m(later / Math.pow(1.02, med - a)), h.m(later / Math.pow(1.04, med - a))]; });
+    const rows = [60, 65, 70, 75, 80, 85].map((a) => { const c2 = h.E.prepaidCase({ price, age: a, sex: 'f', rate: 0.02 }); const c4 = h.E.prepaidCase({ price, age: a, sex: 'f', rate: 0.04 });
+      return [`${a}`, h.num1(c2.median), h.m(c2.later), h.m(c2.need), h.m(c4.need)]; });
     return `
 <h2>The same funeral, by age at purchase</h2>
 <p>A funeral priced ${h.m(price)} today (the US funeral home spending per death at ${h.month} prices), grown at ${h.pc(t, 1)} a year to the median age at death of a woman of each age, and what would have to be saved today to pay it then at 2% or 4% a year after tax.</p>
+<details class="repli-section"><summary>The same funeral by age at purchase, and what to save instead</summary>
 ${h.table(['Age today', 'Median age at death', 'Funeral by then', 'Save today at 2%', 'Save today at 4%'], rows, 'NCHS United States life table 2024, women; BLS funeral index trend; Census 2022 funeral home revenue per death. The savings rates are illustrations, not forecasts.', ['l', 'r', 'r', 'r', 'r'])}
+</details>
 <p>When the savings rate after tax is below the funeral trend, the sum needed today is above today’s price, and prepaying at today’s price comes out ahead on the items it guarantees. When the rate is above the trend, saving does. The younger the buyer, the longer the wait and the larger the difference either way.</p>
 
 <h2>What else to weigh</h2>
 <p>The calculator compares money. Three other things decide many purchases.</p>
 <ul>
-<li><strong>Flexibility.</strong> Savings, or a payable-on-death bank account naming the person who will arrange the funeral, can pay any funeral home, in any state, for any choice made later. A prepaid contract binds the money to one provider and one plan, unless it can be transferred.</li>
+<li><strong>Flexibility.</strong> Savings, or a bank account payable on death to the person who will arrange the funeral, can pay any funeral home, in any state, for any choice made later. A prepaid contract binds the money to one provider and one plan, unless it can be transferred.</li>
 <li><strong>Protection of the money.</strong> Each state sets how a pre-need seller must hold the payments: in a trust, in an insurance policy, or in some other way, and how much of each payment must be set aside. If the seller goes out of business, that protection is what remains. The state regulator can say which rules apply.</li>
 <li><strong>What is left outside.</strong> Items the contract does not guarantee, cemetery charges bought separately, and cash advance items are paid at the later price, by the family. The ${h.a('funeral-rule', 'Funeral Rule page')} lists them.</li>
 </ul>

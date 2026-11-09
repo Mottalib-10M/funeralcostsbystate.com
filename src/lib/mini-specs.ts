@@ -23,9 +23,10 @@ const YESNO = [{ value: '0', label: 'No' }, { value: '1', label: 'Yes' }];
 const money = (id: string, label: string, def: number, help?: string) => ({ id, label, def, unit: '$', max: 50_000_000, help });
 const ageIn = (def: number, label = 'Age today') => ({ id: 'age', label, def, unit: 'yrs', max: 100 });
 const stateIn = (def: E.StateCode = 'TX') => ({ id: 'state', label: 'State', def: stateIndex(def), options: ST });
-const trendPct = Math.round(E.funeralTrend() * 1000) / 10;
+const trendPct = E.trendField();
+const SPOUSE = { id: 'ssa', label: 'A surviving husband or wife, or a child under 18?', def: 0, options: YESNO, help: `Only they can claim the ${m(P.ssa.lumpSum)} that Social Security pays once` };
 const usToday = () => E.spendToday('US').all as number;
-const VA_KIND = [{ value: '0', label: 'Service-connected death, on or after September 11, 2001' }, { value: '1', label: 'Service-connected death, before September 11, 2001' }, { value: '2', label: 'Death not service-connected' }, { value: '3', label: 'Not service-connected, hospitalized by VA' }];
+const VA_KIND = [{ value: '0', label: 'Caused by service, since Sept. 11, 2001' }, { value: '1', label: 'Caused by service, before Sept. 11, 2001' }, { value: '2', label: 'Not caused by service (most cases)' }, { value: '3', label: 'Not caused by service, in a VA hospital' }];
 const dd = (iso: string) => displayDate(iso, 'en-US');
 const DATE_BANDS = P.va.nonService.map((x, i) => ({ value: String(i), label: i === 0 ? `On or after ${dd(x.from)}` : `${dd(x.from)} to ${dd(P.va.nonService[i - 1].from)}` }));
 
@@ -44,9 +45,9 @@ const SPECS: Record<string, MiniSpec> = {
   },
   cremation: {
     title: 'A cremation price list, added up', cta: 'Funeral costs in your state', ctaPage: 'funeral-costs-by-state',
-    inputs: [stateIn('TX'), money('services', 'Funeral home charges', 1500, 'Basic services, transfer, paperwork'), money('crematory', 'Crematory fee, if listed apart', 400), money('items', 'Urn, copies, other items', 300), { id: 'vet', label: 'Veteran', def: 0, options: [{ value: '0', label: 'No' }, { value: '1', label: 'Yes, death not service-connected' }, { value: '2', label: 'Yes, service-connected death' }] }],
-    run: (v) => { const s = st(v.state); const total = v.services + v.crematory + v.items; const va = E.vaAllowance(v.vet === 2 ? 'service' : v.vet === 1 ? 'nonService' : 'none'); const ss = E.ssaLumpSum(true);
-      return { head: ['Your price list adds up to', m(total)], rows: [[`Share of spending per death in ${E.stateName(s)}`, pct(total / (E.spendToday(s).all as number))], ['VA burial allowance, if eligible', va.burial > 0 ? `− ${m(va.burial)}` : 'none'], ['Social Security, spouse or child', `− ${m(ss)}`], ['Left to pay', m(Math.max(0, total - va.burial - ss))]], note: 'The amounts loaded are an example to type over, not prices we read anywhere. The VA plot allowance is left out here because a cremation may not use a plot.' }; },
+    inputs: [stateIn('TX'), money('services', 'Funeral home charges, direct cremation included', 1500, 'Basic services, transfer, paperwork, the cremation itself'), money('crematory', 'Crematory fee, if listed apart', 400), money('items', 'Urn, copies, other items', 300), { id: 'vet', label: 'Was the person a veteran?', def: 0, options: [{ value: '0', label: 'No, or no VA condition is met' }, { value: '1', label: 'Veteran on a VA pension or compensation, or in VA care' }, { value: '2', label: 'Veteran whose death was caused by military service' }] }, SPOUSE],
+    run: (v) => { const s = st(v.state); const total = v.services + v.crematory + v.items; const va = E.vaAllowance(v.vet === 2 ? 'service' : v.vet === 1 ? 'nonService' : 'none'); const ss = E.ssaLumpSum(v.ssa === 1);
+      return { head: ['Your price list adds up to', m(total)], rows: [['VA burial allowance, if a VA condition is met', va.burial > 0 ? `− ${m(va.burial)}` : 'none'], ['Social Security, for a spouse or young child', ss > 0 ? `− ${m(ss)}` : 'none'], ['Left to pay', m(Math.max(0, total - va.burial - ss))], [`For comparison: all funerals in ${E.stateName(s)}, per death`, m(E.spendToday(s).all as number)]], note: 'The amounts loaded are an example to type over, not prices we read anywhere. The comparison line averages every kind of funeral, burials included. The VA plot allowance is left out because a cremation may not use a plot.' }; },
   },
   gpl: {
     title: 'Package price or itemized: what the list lets you drop', cta: 'Cost of cremation', ctaPage: 'cremation-cost',
@@ -56,32 +57,32 @@ const SPECS: Record<string, MiniSpec> = {
   },
   va: {
     title: 'VA burial allowance for one veteran', cta: 'The whole funeral gap', ctaPage: 'home',
-    inputs: [{ id: 'kind', label: 'Kind of death', def: 2, options: VA_KIND }, { id: 'band', label: 'Date of death', def: 0, options: DATE_BANDS }, { id: 'marker', label: 'Headstone or marker allowance claimed', def: 0, options: YESNO }, { id: 'ssa', label: 'Spouse or child for Social Security', def: 1, options: YESNO }],
+    inputs: [{ id: 'kind', label: 'Was the death caused by military service?', def: 2, options: VA_KIND }, { id: 'band', label: 'Date of death', def: 0, options: DATE_BANDS }, { id: 'marker', label: 'Headstone or marker allowance claimed', def: 0, options: YESNO }, SPOUSE],
     run: (v) => { const b = P.va.nonService[Math.max(0, Math.min(P.va.nonService.length - 1, Math.round(v.band)))]; const kind: E.Veteran = v.kind >= 2 ? 'nonService' : 'service';
       const date = v.kind === 1 ? '2001-01-01' : b.from; const a = E.vaAllowance(kind, date, v.kind === 3); const hsKnown = b.from >= P.va.headstone[P.va.headstone.length - 1].from; const hs = v.marker === 1 && hsKnown ? E.headstoneAllowance(b.from) : 0; const ss = E.ssaLumpSum(v.ssa === 1);
-      return { head: ['Most the VA pays toward it', m(a.total + hs)], rows: [['Burial allowance', m(a.burial)], ['Plot or interment allowance', a.plot > 0 ? m(a.plot) : 'not separate'], ['Headstone or marker allowance', hs > 0 ? m(hs) : v.marker === 1 ? 'see va.gov for that date' : 'not claimed'], ['Social Security lump sum', ss > 0 ? m(ss) : 'none']], note: 'Maximum amounts from va.gov. The person paying must not be repaid by another body, and the conditions of service and discharge apply.' }; },
+      return { head: ['Most the VA pays: burial, plot and marker', m(a.total + hs)], rows: [['Burial allowance', m(a.burial)], ['Plot or interment allowance', a.plot > 0 ? m(a.plot) : 'none for this kind of death'], ['Headstone or marker allowance', hs > 0 ? m(hs) : v.marker === 1 ? 'see va.gov for that date' : 'not claimed'], ['Social Security lump sum, paid apart, not by the VA', ss > 0 ? m(ss) : 'none']], note: `Maximum amounts from va.gov.${kind === 'nonService' ? ' For a death not caused by service, the VA pays only if the veteran was on a VA pension or compensation, had a claim pending, or died in VA care.' : ''} The person paying must not be repaid by another body, and a dishonorable discharge rules it out.` }; },
   },
   prepaid: {
     title: 'Prepay the funeral or set money aside', cta: 'Burial insurance against the same funeral', ctaPage: 'burial-insurance',
-    inputs: [money('price', 'Prepaid price quoted today', Math.round(E.spendToday('US').homes as number), 'Loaded: US funeral home spending per death'), ageIn(70), { id: 'sex', label: 'Sex', def: 1, options: SEX }, { id: 'rate', label: 'Your savings earn, a year', def: 3, unit: '%', max: 20, decimals: 1, help: 'Your own assumption' }, { id: 'trend', label: 'Funeral prices rise, a year', def: trendPct, unit: '%', max: 20, decimals: 1 }],
-    run: (v) => { const med = E.medianAgeAtDeath(v.age, sx(v.sex)); const n = Math.max(0, med - v.age); const later = E.grow(v.price, v.trend / 100, n); const need = later / Math.pow(1 + v.rate / 100, n);
-      return { head: ['To save instead, set aside today', m(need)], rows: [[`Same funeral at ${age1(med)}`, m(later)], ['Prepaid price today', m(v.price)], [need > v.price ? 'Prepaying costs less by' : 'Saving costs less by', m(Math.abs(need - v.price))]], note: 'Median age at death from the NCHS US life table. A prepaid contract only fixes what it lists, and protection of the money differs by state.' }; },
+    inputs: [money('price', 'Prepaid price quoted today', Math.round(E.spendToday('US').homes as number), 'Example: US average funeral home spending per death, not a quote'), ageIn(70), { id: 'sex', label: 'Sex', def: 1, options: SEX }, { id: 'rate', label: 'Your savings earn, a year', def: 3, unit: '%', max: 20, decimals: 1, help: 'Your own assumption' }, { id: 'trend', label: 'Funeral prices rise, a year', def: trendPct, unit: '%', max: 20, decimals: 1 }],
+    run: (v) => { const r = E.prepaidCase({ price: v.price, age: v.age, sex: sx(v.sex), rate: v.rate / 100, trend: E.trendFromField(v.trend) });
+      return { head: ['To save instead, set aside today', m(r.need)], rows: [[`Same funeral at age ${formatNumber(r.median, 1)}, the age half of people reach`, m(r.later)], ['Prepaid price today', m(v.price)], [r.need > v.price ? 'Prepaying costs less by' : 'Saving costs less by', m(Math.abs(r.need - v.price))]], note: 'Age at death from the United States life table (National Center for Health Statistics): this calculator uses US figures, not your state. A prepaid contract only fixes what it lists, and protection of the money differs by state.' }; },
   },
   final: {
     title: 'Final expense policy: when premiums pass the face amount', cta: 'What a funeral will cost by then', ctaPage: 'burial-insurance',
-    inputs: [ageIn(65), { id: 'sex', label: 'Sex', def: 0, options: SEX }, money('premium', 'Your quoted premium, a month', 60), money('face', 'Face amount', 10000), { id: 'stop', label: 'Premiums stop at', def: 0, unit: 'yrs', max: 121, help: '0 if paid for life' }],
+    inputs: [ageIn(65), { id: 'sex', label: 'Sex', def: 0, options: SEX }, money('premium', 'Your quoted premium, a month', 60), money('face', 'Amount the policy pays (face amount)', 10000), { id: 'stop', label: 'Premiums stop at', def: 0, unit: 'yrs', max: 121, help: '0 if paid for life' }],
     run: (v) => { const r = E.finalExpense({ age: v.age, sex: sx(v.sex), premium: v.premium, face: v.face, stopAge: v.stop });
-      return { head: ['Premiums equal the face amount at', age1(r.breakEvenAge)], rows: [['Chance of being alive then', pct(r.aliveAtBreakEven)], ['Premiums paid, on average, before death', m(r.expected)], ['Half of people your age live past', age1(r.median)], ['Most you can pay in', Number.isFinite(r.maxPaid) ? m(r.maxPaid) : 'no limit']], note: 'NCHS US life tables 2024, whole population. Uses only the premium you type: no price is suggested.' }; },
+      return { head: ['Your premiums add up to what the policy pays at', age1(r.breakEvenAge)], rows: [['Chance of being alive then', pct(r.aliveAtBreakEven)], ['Premiums paid, on average, before death', m(r.expected)], ['Half of people your age live past', age1(r.median)], ['Most you can pay in', Number.isFinite(r.maxPaid) ? m(r.maxPaid) : 'no limit']], note: 'United States life tables 2024 (National Center for Health Statistics), whole population: US figures, not your state. Uses only the premium you type: no price is suggested.' }; },
   },
   burial: {
     title: 'A fixed face amount against a rising funeral bill', cta: 'Final expense break-even', ctaPage: 'final-expense-insurance',
-    inputs: [stateIn('TX'), ageIn(70), { id: 'sex', label: 'Sex', def: 1, options: SEX }, money('face', 'Face amount of the policy', 10000)],
+    inputs: [stateIn('TX'), ageIn(70), { id: 'sex', label: 'Sex', def: 1, options: SEX }, money('face', 'Amount the policy pays (face amount)', 10000)],
     run: (v) => { const s = st(v.state); const med = E.medianAgeAtDeath(v.age, sx(v.sex), s); const n = Math.max(0, med - v.age); const tr = E.funeralTrend(); const later = E.grow(E.spendToday(s).all as number, tr, n);
-      return { head: [`Share of the funeral it pays at ${age1(med)}`, pct(v.face / later)], rows: [[`Spending per death in ${E.stateName(s)} by then`, m(later)], ['The face amount, in today’s funeral prices', m(v.face / Math.pow(1 + tr, n))], ['Still to find', m(Math.max(0, later - v.face))]], note: `Median age at death from the ${E.stateName(s)} life table (NCHS 2022); funeral prices rising ${pct(tr, 1)} a year, the BLS trend from ${P.cpi.trendFrom} to ${P.cpi.trendTo}.` }; },
+      return { head: [`Share of the funeral it pays at ${age1(med)}`, pct(v.face / later)], rows: [[`Spending per death in ${E.stateName(s)} by then`, m(later)], ['What that amount will buy, at today’s prices', m(v.face / Math.pow(1 + tr, n))], ['Still to find', m(Math.max(0, later - v.face))]], note: `Median age at death from the ${E.stateName(s)} life table (NCHS 2022); funeral prices rising ${pct(tr, 1)} a year, the BLS trend from ${P.cpi.trendFrom} to ${P.cpi.trendTo}.` }; },
   },
   graded: {
     title: 'Graded benefit: the waiting period in numbers', cta: 'Break-even of the same policy', ctaPage: 'final-expense-insurance',
-    inputs: [ageIn(70), { id: 'sex', label: 'Sex', def: 0, options: SEX }, money('premium', 'Your quoted premium, a month', 50), money('face', 'Face amount', 8000), { id: 'years', label: 'Waiting period', def: 2, unit: 'yrs', max: 5 }, { id: 'refund', label: 'Interest added to premiums refunded', def: 10, unit: '%', max: 100, help: 'As written in the policy' }],
+    inputs: [ageIn(70), { id: 'sex', label: 'Sex', def: 0, options: SEX }, money('premium', 'Your quoted premium, a month', 50), money('face', 'Amount the policy pays (face amount)', 8000), { id: 'years', label: 'Waiting period', def: 2, unit: 'yrs', max: 5 }, { id: 'refund', label: 'Interest added to premiums refunded', def: 10, unit: '%', max: 100, help: 'As written in the policy' }],
     run: (v) => { const g = Math.round(v.years); const r = E.finalExpense({ age: v.age, sex: sx(v.sex), premium: v.premium, face: v.face, gradedYears: g, gradedRefund: v.refund / 100 });
       return { head: [`Chance of dying in the first ${g} ${g === 1 ? 'year' : 'years'}`, pct(r.dieInGraded)], rows: [['Paid on a death in year 1', m(r.paidIfDeathInYear(1))], [`Paid on a death in year ${Math.max(1, g)}`, m(r.paidIfDeathInYear(Math.max(1, g)))], [`Paid from year ${g + 1}`, m(r.paidIfDeathInYear(g + 1))]], note: 'Refund modeled as premiums paid plus the percentage you type. Many policies pay the full amount at once for an accidental death: read yours.' }; },
   },
@@ -99,14 +100,14 @@ const SPECS: Record<string, MiniSpec> = {
   },
   whole: {
     title: 'Whole life: the premium at which you pay in what it pays out', cta: 'Final expense break-even', ctaPage: 'final-expense-insurance',
-    inputs: [ageIn(55), { id: 'sex', label: 'Sex', def: 1, options: SEX }, money('face', 'Face amount', 25000), money('premium', 'Your quoted premium, a month', 0, '0 to see the yardstick only')],
+    inputs: [ageIn(55), { id: 'sex', label: 'Sex', def: 1, options: SEX }, money('face', 'Amount the policy pays (face amount)', 25000), money('premium', 'Your quoted premium, a month', 0, '0 to see the yardstick only')],
     run: (v) => { const r = E.finalExpense({ age: v.age, sex: sx(v.sex), premium: 1, face: v.face }); const yrsPaid = r.expected / 12; const fair = v.face / (12 * yrsPaid);
       const q = v.premium > 0 ? E.finalExpense({ age: v.age, sex: sx(v.sex), premium: v.premium, face: v.face }) : null;
       return { head: ['Monthly premium where expected premiums equal the face', m2(fair)], rows: [['Years of premiums, on average', yrs(yrsPaid)], ['Half of people your age live past', age1(r.median)], ...(q ? [['Your quote: premiums equal the face at', age1(q.breakEvenAge)] as [string, string], ['Your quote: paid in, on average', m(q.expected)] as [string, string]] : [])], note: 'A yardstick from the NCHS US life table, with no interest, expenses or cash value. It is not a price: an insurer adds costs and invests the premiums.' }; },
   },
   seniors: {
     title: 'Cover after 60: how long it has to last', cta: 'Final expense break-even', ctaPage: 'final-expense-insurance',
-    inputs: [stateIn('FL'), ageIn(68), { id: 'sex', label: 'Sex', def: 1, options: SEX }, { id: 'term', label: 'Term of a policy', def: 10, unit: 'yrs', max: 40 }],
+    inputs: [stateIn('TX'), ageIn(68), { id: 'sex', label: 'Sex', def: 1, options: SEX }, { id: 'term', label: 'Term of a policy', def: 10, unit: 'yrs', max: 40 }],
     run: (v) => { const s = st(v.state); const p = E.payoutChance(v.age, v.term, sx(v.sex), s);
       return { head: [`Chance a ${formatNumber(v.term, 0)}-year term pays out`, pct(p)], rows: [['Alive when it ends', pct(1 - p)], ['Half of people your age live past', age1(E.medianAgeAtDeath(v.age, sx(v.sex), s))], ['One in four live past', age1(E.ageAtQuantile(v.age, sx(v.sex), 0.75, s))], ['VGLI per $10,000, a month at this age', m2(E.vgliMonthly(v.age, 10000))]], note: `${E.stateName(s)} life table (NCHS 2022), whole population. VGLI is the VA plan for veterans, shown as a published federal rate, not a market price.` }; },
   },

@@ -33,7 +33,9 @@ export default definePage({
     return `
 <h2>The same premium at different ages</h2>
 <p>A premium of ${h.m(PREMIUM)} a month for ${h.m(FACE)} of cover reaches the face amount after the same number of years at any age. What changes is the chance of living that long. Real premiums rise with age at purchase; type your own quote into the calculator.</p>
+<details class="repli-section"><summary>Break-even age by age at purchase, men and women</summary>
 ${h.table(['Age at purchase', 'Premiums equal face at', 'Alive then, men', 'Alive then, women', 'Paid on average, men', 'Paid on average, women'], rows, `NCHS United States life tables 2024, whole population. Same premium of ${h.m(PREMIUM)} a month at every age, for illustration only.`, ['l', 'r', 'r', 'r', 'r', 'r'])}
+</details>
 
 <h2>How to read the break-even</h2>
 <p>The break-even age is a simple ratio: the face amount divided by the yearly premium, added to your age today. It ignores interest, which favors the insurer, and it ignores rising funeral prices, which work against the fixed face amount. If you would be likely to live well past the break-even, the money paid in premiums could have been saved instead, and would have grown. If you are likely to die before it, the policy pays more than you put in. The table shows that at most ages the odds lean toward living past it, which is how the insurer covers its claims and costs.</p>

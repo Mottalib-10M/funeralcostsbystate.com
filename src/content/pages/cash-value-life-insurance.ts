@@ -30,7 +30,9 @@ export default definePage({
     return `
 <h2>Surrender values and the tax, side by side</h2>
 <p>Examples at a ${h.pc(RATE)} federal rate, with no loan outstanding. A surrender below the premiums paid gives no taxable gain, and the loss is not deductible.</p>
+<details class="repli-section"><summary>Tax on a surrender, worked through</summary>
 ${h.table(['Cash surrender value', 'Premiums paid', 'Taxable gain', 'Federal tax', 'Left after tax'], rows, 'IRS Publication 525, surrender of a life insurance policy. Example figures; state income tax not included.', ['r', 'r', 'r', 'r', 'r'])}
+</details>
 
 <h2>Three ways to take money out</h2>
 <ul>

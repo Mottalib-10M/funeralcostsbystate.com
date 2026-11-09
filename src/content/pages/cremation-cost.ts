@@ -13,7 +13,7 @@ export default definePage({
   title: 'Cost of Cremation 2026: Add Up a Price List, State by State',
   description: 'Cost of cremation in 2026: add up the lines of a funeral home price list, take off the VA allowance and the Social Security payment, and compare to your state.',
   h1: 'Cost of cremation: add up the price list, then take off what is paid',
-  intro: 'Type the lines of a cremation price list. The total is set against what a death costs on average in your state, then the federal payments come off.',
+  intro: 'No public source prices cremation state by state, so this page prints no average cremation price. Type the lines of a price list from a funeral home near you; the VA and Social Security payments then come off.',
   resume: (h) => {
     const us = h.E.spendToday('US'); const nonSvc = h.E.vaAllowance('nonService');
     return `The cost of cremation is set by the funeral home or crematory that performs it, and every one of them must show it on a General Price List under the FTC Funeral Rule. A direct cremation, with no viewing or ceremony beforehand, is usually the lowest-priced line on that list, and a home that offers it must let you use an alternative container instead of a casket. No public source publishes cremation prices by state, so this page does not print an average price. What can be measured is the spending of all death-care businesses: ${h.m(us.all as number)} per death nationally at ${h.month} prices, of which ${h.m(us.cemeteries as number)} goes to cemeteries and crematories. A veteran’s family may receive a VA burial allowance of ${h.m(nonSvc.burial)} or more for a cremation, and a surviving spouse ${h.m(h.P.ssa.lumpSum)} from Social Security. The calculator adds up the lines of your own price list and takes both off.`;
@@ -42,7 +42,9 @@ export default definePage({
 
 <h2>The cemetery side, by state</h2>
 <p>The Census counts crematories with cemeteries (industry 812220), so the cemetery side of spending per death covers both. States where that side is small spend most of their death-care money at funeral homes, which is what a family choosing cremation would mostly pay. The table shows the states with the largest and the smallest cemetery side, at ${h.month} prices.</p>
+<details class="repli-section"><summary>Cemetery and funeral home spending, states with the largest and smallest cemetery side</summary>
 ${h.table(['State', 'Cemeteries and crematories, per death', 'Funeral homes, per death', 'Cemetery share'], tbl, 'Census Bureau, 2022 Economic Census (NAICS 812210 and 812220), deaths from Census estimates, BLS funeral index. Alaska and Wyoming: split withheld.', ['l', 'r', 'r', 'r'])}
+</details>
 <p>These are averages across every kind of funeral, not cremation prices. They show where the money goes in each state, and they are a reasonable ceiling to hold a cremation quote against: a direct cremation priced above the whole spending per death of your state deserves a second list.</p>
 
 <h2>What the federal government pays toward it</h2>

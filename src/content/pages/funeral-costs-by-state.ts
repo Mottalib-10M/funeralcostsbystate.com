@@ -5,7 +5,7 @@ export default definePage({
   id: 'funeral-costs-by-state',
   group: 'costs',
   order: 100,
-  tool: { kind: 'mini:state', props: { state: stateIndex('NY') } },
+  tool: { kind: 'mini:state', props: { state: stateIndex('TX') } },
   related: ['home', 'cremation-cost', 'funeral-cost-inflation', 'funeral-rule'],
   sources: ['census_ec', 'census_pop', 'bls_cpi'],
   slug: 'average-funeral-cost-by-state',
@@ -13,8 +13,8 @@ export default definePage({
   card: 'All 51 states: what funeral homes, cemeteries and crematories took in per death, in 2022 and today.',
   title: 'Average Funeral Cost by State: All 51, Census Data 2026',
   description: 'Average funeral cost by state from the Census Bureau: what funeral homes, cemeteries and crematories took in per death in all 50 states and DC, carried to 2026.',
-  h1: 'Average funeral cost by state, from what families actually paid',
-  intro: 'Pick a state to see what death-care businesses took in per death there, split between funeral homes and cemeteries, and where it ranks.',
+  h1: 'Average funeral cost by state: what funeral homes and cemeteries take in per death',
+  intro: 'Pick your state for its figure today, or find it in the A to Z list below. It is an average of every kind of funeral, not a price quote.',
   resume: (h) => {
     const us = h.E.spendPerDeath('US'); const r = h.E.ranking();
     return `The average funeral cost in the United States, measured as what funeral homes, cemeteries and crematories took in per death, was ${h.m(us.all as number)} in 2022: ${h.m(us.homes as number)} at funeral homes and ${h.m(us.cemeteries as number)} at cemeteries and crematories. At ${h.month} prices that is about ${h.m(h.today('US'))}. The figure comes from the Census Bureau’s 2022 Economic Census, which counts the revenue of death-care businesses in each state, divided by the deaths the Census Bureau estimates for that state. It ranges from ${h.m(h.today(r[0].s))} per death in ${h.E.stateName(r[0].s)} to ${h.m(h.today(r[r.length - 1].s))} in ${h.E.stateName(r[r.length - 1].s)}. It is an average of every kind of funeral, from a direct cremation to a burial with a plot and a headstone, and it includes cemetery sales made in advance, so it is a measure of spending, not a price quote.`;
@@ -35,10 +35,16 @@ export default definePage({
     const us = h.E.spendPerDeath('US'); const usT = h.E.spendToday('US');
     rows.push(['', 'United States', h.m(usT.all as number), h.m(usT.homes as number), h.m(usT.cemeteries as number), h.num(Math.round(us.deaths)), h.num(us.establishments ?? 0)]);
     const shareHomes = (us.homes as number) / (us.all as number);
+    const az = [...h.E.STATES].map((s) => [h.E.stateName(s), h.m(h.today(s))]);
     return `
-<h2>All 51 states, ranked by spending per death</h2>
+<h2>Every state, A to Z</h2>
+<p>Spending per death at ${h.month} prices: what the state’s funeral homes, cemeteries and crematories took in during 2022, divided by its deaths that year, then brought to today with the federal funeral price index. The national figure is ${h.m(usT.all as number)}.</p>
+${h.table(['State', `Per death, ${h.month}`], az, 'Census Bureau, 2022 Economic Census and population estimates; Bureau of Labor Statistics funeral price index.', ['l', 'r'])}
+
+<details class="repli-section"><summary>The ranked table: funeral homes and cemeteries apart, deaths and businesses</summary>
 <p>Each row divides the 2022 revenue of the state’s death-care businesses by its deaths in 2022, then brings the result to ${h.month} with the BLS funeral price index (the national index, so the same factor applies to every state). Funeral homes are Census industry 812210, cemeteries and crematories 812220.</p>
 ${h.table(['Rank', 'State', `Per death, ${h.month}`, 'Funeral homes', 'Cemeteries and crematories', 'Deaths, 2022', 'Businesses'], rows, 'Census Bureau, 2022 Economic Census, EC2281BASIC; deaths: mean of the Census estimate years ending June 2022 and June 2023. BLS CPI-U funeral expenses.', ['l', 'l', 'r', 'r', 'r', 'r', 'r'])}
+</details>
 
 <h2>How to read a state’s figure</h2>
 <p>Funeral homes account for ${h.pc(shareHomes)} of the national total and cemeteries and crematories for the rest. A family that chooses a direct cremation pays mostly the funeral home side, often with a crematory fee inside it; a family that buries pays both, and the cemetery side can include a plot, the opening and closing of the grave, an outer burial container and a marker. The ${h.a('cremation-cost', 'cost of cremation')} page takes the cremation side apart.</p>

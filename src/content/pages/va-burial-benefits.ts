@@ -31,13 +31,18 @@ export default definePage({
     const hs = h.P.va.headstone.map((x, i) => [`${h.date(x.from)} to ${i === 0 ? 'today' : h.date(h.P.va.headstone[i - 1].from)}`, h.m(x.amount)]);
     const n = h.E.vaAllowance('nonService'); const us = h.today('US');
     return `
-<h2>Every non-service-connected amount since 2013</h2>
-<p>The amount depends on the date of death, not the date of the claim. Before ${h.date(h.P.va.vaCareSameFrom)}, a veteran who was hospitalized by the VA at the time of death had a higher burial allowance; from that date both tables are the same.</p>
+<h2>The amount depends on the date of death</h2>
+<p>For a death not caused by military service on or after ${h.D.vaFrom}, the VA pays up to ${h.m(n.burial)} toward the burial and ${h.m(n.plot)} toward the plot or interment. The amount depends on the date of death, not the date of the claim, so a family claiming late for an older death gets the rate of that year. Before ${h.date(h.P.va.vaCareSameFrom)}, a veteran who was hospitalized by the VA at the time of death had a higher burial allowance; from that date both tables are the same.</p>
+<details class="repli-section"><summary>Every amount since 2013, by date of death</summary>
 ${h.table(['Date of death', 'Burial allowance', 'Plot or interment', 'If hospitalized by VA'], rows, `va.gov, Veterans burial allowance and transportation benefits, page updated ${h.date(h.P.va.pageUpdated)}, read ${h.D.read}.`, ['l', 'r', 'r', 'r'])}
+</details>
 <p>For a service-connected death the allowance is a single sum, ${h.m(h.P.va.serviceConnected)} or ${h.m(h.P.va.serviceConnectedBefore2001)}, with no separate plot allowance, and the VA may also repay some or all of the cost of moving the remains to a VA national cemetery.</p>
 
 <h2>Headstone or marker allowance</h2>
+<p>The VA lists a separate maximum for a headstone or marker. That maximum is reset for deaths from each October 1 and is not a fixed sum: it can go down as well as up. For a death on or after ${h.date(h.P.va.headstone[0].from)} it is ${h.m(h.P.va.headstone[0].amount)}, against ${h.m(h.P.va.headstone[1].amount)} the year before and ${h.m(h.P.va.headstone[2].amount)} the year before that, as listed on va.gov. It is not an error on this page.</p>
+<details class="repli-section"><summary>Every headstone or marker amount, by date of death</summary>
 ${h.table(['Date of death', 'Most paid'], hs, 'va.gov, headstone or marker allowance amounts based on when the veteran died.', ['l', 'r'])}
+</details>
 
 <h2>Who can claim</h2>
 <p>The VA pays the person or organization that paid for the burial and will not be repaid by anyone else, such as another government agency or the veteran’s employer. That can be a surviving spouse or partner from a legal union, a child, a parent, the executor of the estate, another family member or friend, or a funeral home or cemetery. The veteran must not have received a dishonorable discharge. For a death that was not service-connected, one of these must also be true: the veteran died while getting VA care, or traveling with VA authorization to or from such care, had a claim for compensation or pension pending, was receiving a VA pension or compensation, or was eligible for one but received military retired or disability pay instead.</p>

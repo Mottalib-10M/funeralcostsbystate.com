@@ -115,6 +115,21 @@ export function funeralGap(i: GapIn) {
   return { today, trend, median, years, future, va, ssa: ss, paid, gapFuture: Math.max(0, future - paid), gapToday: Math.max(0, today - paid) };
 }
 
+/** Default yearly trend shown in the forms, rounded to one decimal (2.6 %). An untouched field must not change
+ *  the sum: `trendFromField` hands the exact engine trend back when the field still shows that rounded value,
+ *  so the calculator and the page text give the same dollar (testeurs naïfs et audit du 2026-11-09). */
+export const trendField = () => Math.round(funeralTrend() * 1000) / 10;
+export const trendFromField = (pct: number) => (pct === trendField() ? funeralTrend() : pct / 100);
+
+/** Prepaid price against saving: the same funeral grown to the median age at death (US table), and what to set
+ *  aside today at a savings rate. Used by the prepaid calculator and by the table of the prepaid page. */
+export function prepaidCase(i: { price: number; age: number; sex: Sex; rate: number; trend?: number }) {
+  const median = medianAgeAtDeath(i.age, i.sex);
+  const years = Math.max(0, median - i.age);
+  const later = grow(i.price, i.trend ?? funeralTrend(), years);
+  return { median, years, later, need: later / Math.pow(1 + i.rate, years) };
+}
+
 // ---------------------------------------------------------------- final expense policies
 export interface FinalIn { age: number; sex: Sex; state?: StateCode | 'US'; premium: number; face: number; stopAge?: number; gradedYears?: number; gradedRefund?: number }
 /**

@@ -5,7 +5,7 @@ export default definePage({
   id: 'life-insurance-for-seniors',
   group: 'life',
   order: 330,
-  tool: { kind: 'mini:seniors', props: { state: stateIndex('FL') } },
+  tool: { kind: 'mini:seniors', props: { state: stateIndex('TX') } },
   related: ['final-expense-insurance', 'whole-life-insurance-rates-by-age', 'burial-insurance-no-waiting-period', 'home'],
   sources: ['nchs_states', 'nchs_us', 'va_vgli'],
   slug: 'life-insurance-for-seniors',
@@ -16,8 +16,8 @@ export default definePage({
   h1: 'Life insurance for seniors: how long the cover has to last',
   intro: 'Pick your state, age and sex. The calculator shows the chance a term policy pays, the age half and a quarter of people live past, and the VGLI rate at that age.',
   resume: (h) => {
-    const s = 'FL' as const;
-    return `Life insurance for seniors is a question of time. After 60, the chance of dying within any term rises fast, so term policies become dear and often end before they are needed, while whole life and final expense policies last for life but must be paid for as long as you live. On the NCHS 2022 life table for Florida, a woman of 68 has a ${h.pc(h.E.payoutChance(68, 10, 'f', s))} chance of dying within ten years, so a 10-year term would most likely expire unused; half the women of her age live past ${h.num1(h.E.medianAgeAtDeath(68, 'f', s))} and a quarter past ${h.num1(h.E.ageAtQuantile(68, 'f', 0.75, s))}. A permanent policy bought at 68 would be paid for, on average, for about ${h.num1(h.E.finalExpense({ age: 68, sex: 'f', state: s, premium: 1, face: 1 }).expected / 12)} years. As a federal yardstick, VGLI charges ${h.m2(h.E.vgliMonthly(68, 10000))} a month per ${h.m(10000)} at that age. The calculator gives the same figures for any state, age and term.`;
+    const s = 'TX' as const;
+    return `Life insurance for seniors is a question of time. After 60, the chance of dying within any term rises fast, so term policies become dear and often end before they are needed, while whole life and final expense policies last for life but must be paid for as long as you live. On the NCHS 2022 life table for Texas, a woman of 68 has a ${h.pc(h.E.payoutChance(68, 10, 'f', s))} chance of dying within ten years, so a 10-year term would most likely expire unused; half the women of her age live past ${h.num1(h.E.medianAgeAtDeath(68, 'f', s))} and a quarter past ${h.num1(h.E.ageAtQuantile(68, 'f', 0.75, s))}. A permanent policy bought at 68 would be paid for, on average, for about ${h.num1(h.E.finalExpense({ age: 68, sex: 'f', state: s, premium: 1, face: 1 }).expected / 12)} years. As a federal yardstick, VGLI charges ${h.m2(h.E.vgliMonthly(68, 10000))} a month per ${h.m(10000)} at that age. The calculator gives the same figures for any state, age and term.`;
   },
   faqs: (h) => [
     { q: 'Can I get life insurance at 75 or 80?', a: 'Yes, though the choice narrows. Final expense whole life is sold to buyers at these ages, often as guaranteed issue with a graded benefit, and some insurers sell short term policies to older applicants. Face amounts are smaller and premiums higher. At these ages, compare the premium with the face amount: the break-even age can come within a few years.' },
@@ -33,11 +33,15 @@ export default definePage({
     return `
 <h2>The odds and the ages, after 60</h2>
 <p>Chance of dying within ten years, median age at death, the age one in four women live past, and the VGLI rate per ${h.m(10000)} at each age. NCHS United States life tables 2024.</p>
+<details class="repli-section"><summary>Chance of dying within ten years, by age</summary>
 ${h.table(['Age', '10-year death chance, men', 'Women', 'Median age at death, men', 'Women', 'One in four women live past', `VGLI per ${h.m(10000)}, a month`], rows, 'NCHS United States life tables, 2024; VA VGLI rates. Population rates, not insured lives.', ['l', 'r', 'r', 'r', 'r', 'r', 'r'])}
+</details>
 
 <h2>Life expectancy at 65, by state</h2>
 <p>The six states with the longest and the six with the shortest remaining life expectancy for women at 65, with men alongside, on the NCHS U.S. State Life Tables for 2022.</p>
+<details class="repli-section"><summary>Life expectancy at 65, state by state</summary>
 ${h.table(['State', 'Men at 65, years', 'Women at 65, years'], leRows, 'NCHS, U.S. State Life Tables, 2022. All 51 states are in the calculator.', ['l', 'r', 'r'])}
+</details>
 
 <h2>What the numbers mean for a policy</h2>
 <p>A term policy bought at 70 for ten years pays out in a minority of cases, because most buyers outlive it. It suits a need that ends, such as a loan. For a need that does not end, a term policy has a worse flaw: it may expire just when the odds of a claim are highest, and renewing at 80 costs far more, if it is offered at all.</p>

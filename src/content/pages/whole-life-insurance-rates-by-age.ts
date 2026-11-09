@@ -32,7 +32,9 @@ export default definePage({
     return `
 <h2>The yardstick, by age</h2>
 <p>For a face amount of ${h.m(FACE)}, paid for life: the average number of years of premiums before death, and the monthly premium at which those premiums equal the face amount. Scale it to any amount: double the face, double the premium.</p>
+<details class="repli-section"><summary>The yardstick premium by age, men and women</summary>
 ${h.table(['Age', 'Years of premiums, men', 'Yardstick, men', 'Years of premiums, women', 'Yardstick, women'], rows, 'NCHS United States life tables, 2024. No interest, expenses, lapses or cash value: a yardstick, not a price.', ['l', 'r', 'r', 'r', 'r'])}
+</details>
 
 <h2>How the yardstick is built</h2>
 <p>Each year, a person who is still alive pays twelve monthly premiums. The chance of being alive at the start of each year comes from the life table, year after year to age 100. Adding those chances gives the expected number of years of premiums. A premium equal to the face amount divided by twelve times that number makes the expected premiums equal the face amount. The calculation ignores interest: an insurer invests premiums for years before paying, which lets it charge less than the yardstick, while its expenses, commissions, profit and the cash value it builds push the other way.</p>

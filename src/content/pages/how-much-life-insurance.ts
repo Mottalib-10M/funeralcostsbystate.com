@@ -42,7 +42,9 @@ export default definePage({
 
 <h2>The chance a term policy pays out</h2>
 <p>The amount is one decision; the term is the other. Most term policies expire without a claim, which is why they cost little at younger ages. Probability of dying within 20 or 30 years, NCHS United States life tables 2024, whole population:</p>
+<details class="repli-section"><summary>Chance a term policy pays out, by age</summary>
 ${h.table(['Age', '20 years, men', '20 years, women', '30 years, men', '30 years, women'], rows, 'People who buy insurance and pass its health questions tend to live longer than the population as a whole, so these odds are, if anything, higher than those of insured lives.', ['l', 'r', 'r', 'r', 'r'])}
+</details>
 <p>The ${h.a('term-life-insurance-rates-by-age', 'term rates page')} adds the two federal rate tables that can be published, VGLI and the IRS table for group cover, as yardsticks.</p>
 
 <h2>Term, whole or universal</h2>

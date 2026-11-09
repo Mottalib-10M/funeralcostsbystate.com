@@ -34,7 +34,9 @@ export default definePage({
     return `
 <h2>The index, every year</h2>
 <p>Annual averages of the funeral expenses index, its change on the year before, the same change for all consumer prices, and what $1,000 of funeral spending in each year amounts to at ${h.month} prices.</p>
+<details class="repli-section"><summary>The funeral price index, year by year</summary>
 ${h.table(['Year', 'Funeral index', 'Funeral prices, change', 'All prices, change', `$1,000 then, in ${h.month}`], rows, 'BLS CPI-U, U.S. city average, not seasonally adjusted: funeral expenses (CUUR0000SEGD02, December 1986 = 100) and all items (CUUR0000SA0). October 2025 was not collected; annual averages are as published.', ['l', 'r', 'r', 'r', 'r'])}
+</details>
 
 <h2>What the index measures</h2>
 <p>The BLS prices a fixed set of funeral goods and services, month after month, in urban areas across the country, and reports how the price of that set changes. It does not measure what families spend: if more of them choose cremation, spending per death falls even when every price on the list rises. That is why this site uses two sources together. The level comes from the Census Bureau, which counts what death-care businesses took in per death in 2022 (${h.m(us22)} nationally). The movement since then comes from the BLS index, which brings that level to ${h.m(h.today('US'))} at ${h.month} prices.</p>

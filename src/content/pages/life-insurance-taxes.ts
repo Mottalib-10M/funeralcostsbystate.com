@@ -33,7 +33,9 @@ export default definePage({
     return `
 <h2>The same payout in estates of different sizes</h2>
 <p>A ${h.m(PAYOUT)} death benefit owned by the insured, added to estates of different sizes, at the ${h.P.year} exclusion of ${h.m(h.P.estate.basicExclusion)}, with no lifetime gifts, deductions or a late spouse’s unused exclusion.</p>
+<details class="repli-section"><summary>Estate tax caused by a payout, by size of estate</summary>
 ${h.table(['Estate without the policy', 'Tax without it', 'Tax with it', 'Extra tax', 'Payout left to heirs'], rows, 'Form 706 Table A unified rate schedule: every amount above the exclusion falls in the top bracket. State estate and inheritance taxes not included.', ['r', 'r', 'r', 'r', 'r'])}
+</details>
 <p>Above the exclusion, every additional dollar is taxed at ${h.pc(h.P.estate.topRate, 0)}, because the exclusion is far above the start of the top bracket in the Form 706 rate schedule (${h.m(h.P.estate.topBracketFrom)}, where the tentative tax is ${h.m(h.P.estate.topBracketBase)}; on ${h.m(2000000)} it would be ${h.m(t)}). A payout to a surviving spouse who is a US citizen qualifies for the marital deduction and owes nothing at the first death, though it adds to the spouse’s own estate.</p>
 
 <h2>Cover from work above the exclusion</h2>

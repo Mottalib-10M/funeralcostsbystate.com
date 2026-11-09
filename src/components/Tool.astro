@@ -16,5 +16,5 @@ const href = spec?.ctaPage ? route(spec.ctaPage, 'en') : undefined;
 const numDefaults: Record<string, number> = {};
 for (const [k, v] of Object.entries(props)) if (typeof v === 'number') numDefaults[k] = v;
 ---
-{kind === 'funeral' && <FuneralCalc client:load {...props} methodHref={methodHref} idPrefix={idPrefix ?? 'fc'} />}
+{kind === 'funeral' && <FuneralCalc client:load {...props} methodHref={methodHref} vaHref={route('va-burial-benefits', 'en')} idPrefix={idPrefix ?? 'fc'} />}
 {mini && <MiniSim client:load kind={mini} href={href} defaults={numDefaults} primary={primary} idPrefix={idPrefix ?? (primary ? 'p' : 'm')} title={typeof props.title === 'string' ? props.title : undefined} />}

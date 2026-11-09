@@ -103,3 +103,13 @@ h1 { font-weight: 700; } h2 { font-weight: 650; } h3 { font-weight: 600; }
   .clamp-more { display: inline-block; cursor: pointer; margin-top: 0.25rem; font-size: 0.875rem; font-weight: 600; color: var(--color-accent-700); text-decoration: underline; text-underline-offset: 3px; }
   .clamp-toggle:focus-visible ~ .clamp-more { outline: 2px solid #111827; outline-offset: 3px; }
 }
+/* Sections repliées (mise en conformité du 2026-11-09, testeurs naïfs : pages de 30 écrans sur téléphone).
+   Le texte reste dans le HTML (référencement, citation par les IA) ; le titre cliquable dit ce qu'il ouvre. */
+details.repli-section { margin: 1.5em 0; border-top: 1px solid var(--color-navy-200); border-bottom: 1px solid var(--color-navy-200); }
+details.repli-section > summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem 0; font-weight: 600; font-size: 1.05rem; color: var(--color-navy-900); }
+details.repli-section > summary::-webkit-details-marker { display: none; }
+details.repli-section > summary::after { content: '+'; flex-shrink: 0; font-size: 1.4rem; line-height: 1; color: var(--color-accent-700); }
+details.repli-section[open] > summary::after { content: '−'; }
+details.repli-section > summary h2, details.repli-section > summary h3 { margin: 0; padding: 0; border: 0; font-size: inherit; }
+.prose details.repli-section > summary + * { margin-top: .5em; }
+details.repli-section + details.repli-section { margin-top: -1.5em; border-top: 0; }

@@ -11,7 +11,8 @@
  * - `title` : deux calculateurs empilés sur une page reçoivent chacun leur titre ;
  * - champs `avance` : rangés dans un repli dont le titre montre la valeur actuelle de chacun (« Now: … »).
  */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ETAT_MEMO } from '../../lib/fc-defaults';
 import NumberField from '../ui/NumberField';
 import SelectField from '../ui/SelectField';
 import { getSpec } from '../../lib/mini-specs';
@@ -27,7 +28,13 @@ export default function MiniSim({ kind, lang = 'en', href, defaults = {}, primar
   const [v, setV] = useState<Record<string, number>>(() => Object.fromEntries(spec.inputs.map((i) => [i.id, defaults[i.id] ?? i.def])));
   const [touched, setTouched] = useState<Record<string, boolean>>(() => (saisiParLeLecteur ? Object.fromEntries(spec.inputs.map((i) => [i.id, true])) : {}));
   const out = useMemo(() => spec.run(v, touched), [v, spec, touched]);
-  const set = (id: string) => (x: number) => { setV((o) => ({ ...o, [id]: x })); setTouched((o) => (o[id] ? o : { ...o, [id]: true })); };
+  const set = (id: string) => (x: number) => { setV((o) => ({ ...o, [id]: x })); setTouched((o) => (o[id] ? o : { ...o, [id]: true }));
+    // Un État choisi ici est repris sur les autres pages du site (après le premier rendu, RECETTE §17.5).
+    if (id === 'state') { const nom = spec.inputs.find((i) => i.id === 'state')?.options?.find((o) => o.value === String(x))?.label; try { if (nom) localStorage.setItem(ETAT_MEMO, nom); } catch { /* storage refused */ } } };
+  useEffect(() => {
+    const champ = spec.inputs.find((i) => i.id === 'state' && i.options); if (!champ) return;
+    try { const nom = localStorage.getItem(ETAT_MEMO); const o = champ.options!.find((x) => x.label === nom); if (o) setV((a) => ({ ...a, state: Number(o.value) })); } catch { /* storage refused */ }
+  }, []);
   const fid = (id: string) => `${idPrefix}-${kind}-${id}`;
   const champ = (i: MiniInput) => (i.options
     ? <SelectField key={i.id} id={fid(i.id)} label={i.label} value={String(v[i.id])} onChange={(x) => set(i.id)(Number(x))} options={i.options} help={i.help} />

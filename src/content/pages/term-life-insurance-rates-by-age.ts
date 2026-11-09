@@ -31,12 +31,16 @@ export default definePage({
     return `
 <h2>VGLI monthly rates by age</h2>
 <p>Rates in force from ${h.date(h.P.vgli.asOf)}, per ${h.m(10000)} of cover, and for ${h.m(100000)} and the maximum of ${h.m(h.P.vgli.max)}. The last column is the chance of a man of the first age of the band dying within five years, NCHS 2024.</p>
+<details class="repli-section"><summary>VGLI rates by age band</summary>
 ${h.table(['Age band', `Per ${h.m(10000)}`, `${h.m(100000)} of cover`, `${h.m(h.P.vgli.max)} of cover`, '5-year death chance, men'], rows, `VA, VGLI premium rates (page updated ${h.date(h.P.vgli.pageUpdated)}). Same rates for men and women, no health rating.`, ['l', 'r', 'r', 'r', 'r'])}
+</details>
 <p>VGLI is priced for a whole group, with no health questions for those who apply in time, men and women alike. It is a renewable plan whose premium steps up every five years, not a level 20-year term. That is why it is cheap compared to the risk at older ages and dear at younger ones, where a healthy buyer in the market often pays less.</p>
 
 <h2>IRS Table 2-2: the cost of group-term life for tax</h2>
 <p>When an employer provides group-term life insurance above ${h.m(h.P.irsTable22.exclusion)}, the cost of the excess, from this table, is added to the employee’s wages. Age is the employee’s age on the last day of the tax year.</p>
+<details class="repli-section"><summary>The IRS cost of employer cover, by age</summary>
 ${h.table(['Age', `Cost per ${h.m(1000)}, a month`, `${h.m(100000)} of excess, a year`], irs, 'IRS Publication 15-B (2026), Table 2-2.', ['l', 'r', 'r'])}
+</details>
 <p>The table is a tax rule, not a price, but it is a published federal schedule that puts a cost on group cover at each age. The ${h.a('life-insurance-taxes', 'tax page')} has a calculator for the amount added to your wages.</p>
 
 <h2>Reading a market quote against these tables</h2>

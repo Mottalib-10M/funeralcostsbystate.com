@@ -31,7 +31,9 @@ export default definePage({
     return `
 <h2>The chance of a death inside the waiting period</h2>
 <p>Probability of dying within two or three years of buying, by age and sex, on the NCHS United States life table. The table covers the whole population; buyers of guaranteed issue policies include people in poorer health than average, so their odds are higher, which is why insurers grade the benefit.</p>
+<details class="repli-section"><summary>Chance of dying in the waiting period, by age</summary>
 ${h.table(['Age', '2 years, men', '2 years, women', '3 years, men', '3 years, women'], rows, 'NCHS United States life tables, 2024. Chance of death from any cause within the period.', ['l', 'r', 'r', 'r', 'r'])}
+</details>
 
 <h2>What a graded policy pays, worked through</h2>
 <p>A man of ${AGE} buys a guaranteed issue policy of ${h.m(FACE)} for ${h.m(PREMIUM)} a month, with a two-year graded period that returns premiums plus 10%. If he dies from natural causes in the first year, his beneficiary receives ${h.m(r.paidIfDeathInYear(1))}; in the second year, ${h.m(r.paidIfDeathInYear(2))}; from the third year, the full ${h.m(FACE)}. These are example figures; real policies differ in the length of the period, the refund rule and the treatment of accidents. Type your own into the calculator.</p>

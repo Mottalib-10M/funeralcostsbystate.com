@@ -32,7 +32,9 @@ export default definePage({
     return `
 <h2>The same path under three sets of terms</h2>
 <p>The index path of the calculator, credited with a ${h.pc(CAP, 0)} cap at full participation, the same cap at 60% participation, and a 12% cap at 60% participation, all with a floor of zero. The path is an example to test the terms, not market data.</p>
+<details class="repli-section"><summary>The cap and floor on a past index path</summary>
 ${h.table(['Year', 'Index change', `Cap ${h.pc(CAP, 0)}, 100%`, `Cap ${h.pc(CAP, 0)}, 60%`, 'Cap 12%, 60%'], rows, 'Interest credited before the cost of insurance and fees. Annual point-to-point segments.', ['l', 'r', 'r', 'r', 'r'])}
+</details>
 <p>The floor matters most in a falling year and the cap in a strong one. Over a run of years that includes both, the credit lands well below the index in rising markets and above it in falling ones. An illustration that assumes the same rate every year hides that pattern; the sequence of years is what the terms act on.</p>
 
 <h2>What is deducted</h2>

@@ -7,7 +7,7 @@ export default definePage({
   id: 'burial-insurance',
   group: 'final',
   order: 210,
-  tool: { kind: 'mini:burial', props: { state: stateIndex('OH'), face: FACE } },
+  tool: { kind: 'mini:burial', props: { state: stateIndex('TX'), face: FACE } },
   related: ['final-expense-insurance', 'funeral-cost-inflation', 'prepaid-funeral', 'funeral-costs-by-state'],
   sources: ['census_ec', 'bls_cpi', 'nchs_states'],
   slug: 'burial-insurance',
@@ -18,8 +18,8 @@ export default definePage({
   h1: 'Burial insurance for seniors: will the face amount cover a funeral?',
   intro: 'Pick your state and type the face amount of a burial policy. The calculator sets it against the state’s spending per death at your likely age of death.',
   resume: (h) => {
-    const s = 'OH' as const; const med = h.E.medianAgeAtDeath(70, 'f', s); const later = h.E.grow(h.today(s), h.E.funeralTrend(), med - 70);
-    return `Burial insurance is a small life insurance policy meant to pay for a funeral: a fixed face amount, usually paid to a beneficiary, for a level monthly premium. The face amount is fixed when the policy is bought, while funeral prices keep rising, so the share of the bill it pays falls every year. In Ohio, death-care businesses took in ${h.m(h.today(s))} per death at ${h.month} prices, from Census and BLS data. A woman of 70 in Ohio has even odds of living past ${h.num1(med)} on the state life table, and at the funeral price trend of ${h.pc(h.E.funeralTrend(), 1)} a year that spending would reach about ${h.m(later)} by then. A ${h.m(FACE)} policy would pay ${h.pc(FACE / later)} of it. Spending per death is an average of all funerals, including burials with a plot and a headstone; a simpler funeral costs less. The calculator does the sum for any state, age and face amount.`;
+    const s = 'TX' as const; const med = h.E.medianAgeAtDeath(70, 'f', s); const later = h.E.grow(h.today(s), h.E.funeralTrend(), med - 70);
+    return `Burial insurance is a small life insurance policy meant to pay for a funeral: a fixed face amount, usually paid to a beneficiary, for a level monthly premium. The face amount is fixed when the policy is bought, while funeral prices keep rising, so the share of the bill it pays falls every year. In Texas, death-care businesses took in ${h.m(h.today(s))} per death at ${h.month} prices, from Census and BLS data. A woman of 70 in Texas has even odds of living past ${h.num1(med)} on the state life table, and at the funeral price trend of ${h.pc(h.E.funeralTrend(), 1)} a year that spending would reach about ${h.m(later)} by then. A ${h.m(FACE)} policy would pay ${h.pc(FACE / later)} of it. Spending per death is an average of all funerals, including burials with a plot and a headstone; a simpler funeral costs less. The calculator does the sum for any state, age and face amount.`;
   },
   faqs: (h) => [
     { q: 'How much burial insurance do I need?', a: 'Enough to cover the funeral you want, at the price it will have when it is needed, less what will be paid anyway. Start from a price list or your state’s spending per death, grow it to the age you are likely to reach, then take off the VA allowance, the Social Security lump sum and money set aside. The funeral cost calculator on the home page does all three steps.' },
@@ -34,7 +34,9 @@ export default definePage({
     return `
 <h2>A ${h.m(FACE)} policy bought at 70, state by state</h2>
 <p>Spending per death today, the median age at death of a woman of 70 in each state, that spending grown at ${h.pc(t, 1)} a year to that age, and the share of it a ${h.m(FACE)} face amount would pay.</p>
+<details class="repli-section"><summary>The same policy in twelve states</summary>
 ${h.table(['State', `Per death, ${h.month}`, 'Median age at death', 'By then', `Share paid by ${h.m(FACE)}`], rows, 'Census Bureau 2022 Economic Census and population estimates; BLS funeral index; NCHS U.S. State Life Tables, 2022 (women).', ['l', 'r', 'r', 'r', 'r'])}
+</details>
 <p>Two things move the share: the level of spending in the state, and how long people there live. A state with long lives gives prices more years to rise before the policy pays. All 51 states are in the calculator.</p>
 
 <h2>Spending per death is not your funeral</h2>

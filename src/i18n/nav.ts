@@ -2,7 +2,7 @@ import { route, type Locale } from './routes';
 import { PAGES, pageById } from '../lib/guides';
 import type { Group } from '../lib/guide-types';
 export interface NavLink { href: string; label: string } export interface NavCategory { label: string; links: NavLink[] }
-const CORE: Record<string, string> = { home: 'Funeral cost calculator', method: 'How the figures are worked out', about: 'About', widget: 'Embed the calculator', contact: 'Contact', editorial: 'Editorial policy', privacy: 'Privacy', terms: 'Legal notice', cookies: 'Cookies' };
+const CORE: Record<string, string> = { home: 'Funeral cost calculator (home page)', method: 'How the figures are worked out', about: 'About', widget: 'Embed the calculator', contact: 'Contact', editorial: 'Editorial policy', privacy: 'Privacy', terms: 'Legal notice', cookies: 'Cookies' };
 const GROUP_LABEL: Record<Group, string> = { costs: 'Funeral costs and help', final: 'Final expense and burial insurance', life: 'Life insurance', tax: 'Taxes on a payout' };
 export const GROUPS_ORDER: Group[] = ['costs', 'final', 'life', 'tax'];
 export const groupLabel = (g: Group) => GROUP_LABEL[g];
@@ -16,6 +16,7 @@ function categoriesCompletes(lang: Locale): NavCategory[] {
 const COURT: Record<string, string> = { 'Funeral costs and help': 'Funeral costs', 'Final expense and burial insurance': 'Final expense', 'Life insurance': 'Life insurance', 'Taxes on a payout': 'Taxes' };
 export const navCategories = (lang: Locale, court = true): NavCategory[] =>
   categoriesCompletes(lang).map((c) => (court ? { ...c, label: COURT[c.label] ?? c.label } : c));
-export const navDirect = (_lang: Locale): NavLink[] => [];
+// Entrée par situation (testeurs du 2026-11-09 : « rien ne s'appelle Someone has died »).
+export const navDirect = (lang: Locale): NavLink[] => [{ href: `${route('home', lang)}#start`, label: 'Someone has died? Start here' }];
 export const footerColumns = (lang: Locale): NavCategory[] => [...GROUPS_ORDER.map((g) => ({ label: GROUP_LABEL[g], links: inGroup(g, lang) })).filter((c) => c.links.length), { label: 'This site', links: ['home', 'method', 'about', 'contact', 'editorial', 'widget', 'terms', 'privacy', 'cookies'].map((i) => link(i, lang)) }];
 export const popularLinks = (_lang: Locale): NavLink[] => [];

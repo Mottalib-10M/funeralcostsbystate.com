@@ -159,3 +159,29 @@ describe('taxes', () => {
     expect(E.iulYears([0.1, -0.1], 1, 1, -1).index).toBeCloseTo(1.1 * 0.9 - 1, 12);
   });
 });
+
+// Audit réglementaire du 2026-11-09 (RECETTE §17.4 point 4) : les bornes, des deux côtés.
+describe('bornes (audit réglementaire du 2026-11-09)', () => {
+  it('VA : la veille et le jour du changement de barème', () => {
+    expect(E.vaAllowance('nonService', '2026-09-30').total).toBe(2004);
+    expect(E.vaAllowance('nonService', '2026-10-01').total).toBe(2064);
+    expect(E.vaAllowance('service', '2001-09-10').total).toBe(1500);
+    expect(E.vaAllowance('service', '2001-09-11').total).toBe(2000);
+    expect(E.headstoneAllowance('2026-09-30')).toBe(441);
+    expect(E.headstoneAllowance('2026-10-01')).toBe(420);
+  });
+  it('IRS Table 2-2 : changement de tranche à 25 et à 70 ans', () => {
+    expect(E.imputedIncome(24, 51000).monthly).toBe(0.05);
+    expect(E.imputedIncome(25, 51000).monthly).toBe(0.06);
+    expect(E.imputedIncome(69, 51000).monthly).toBe(1.27);
+    expect(E.imputedIncome(70, 51000).monthly).toBe(2.06);
+  });
+  it('succession : juste sous l’exclusion, rien ; un dollar au-dessus, 40 cents', () => {
+    expect(E.estateTaxOnPayout(14000000, 1000000).extra).toBe(0);
+    expect(E.estateTaxOnPayout(14000000, 1000001).extra).toBeCloseTo(0.4, 6);
+  });
+  it('âge 100 et au-delà : la table se ferme, le calcul reste fini', () => {
+    expect(Number.isFinite(E.medianAgeAtDeath(100, 'f'))).toBe(true);
+    expect(E.funeralGap({ state: 'TX', age: 105, sex: 'm', veteran: 'none', ssa: false, saved: 0, cover: 0 }).gapFuture).toBeGreaterThan(0);
+  });
+});

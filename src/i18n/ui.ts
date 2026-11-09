@@ -2,7 +2,7 @@ import type { Locale } from './routes';
 const en = {
   updatedOn: 'Figures checked on', editorialPolicy: 'Editorial policy', contactLabel: 'Contact', reviewedBy: 'Data read and sums checked by',
   skipToContent: 'Skip to content', mainNav: 'Main navigation', breadcrumbLabel: 'Breadcrumb', breadcrumbHome: 'Home', menuOpen: 'Open menu',
-  faqTitle: 'Questions people ask before they pay for a funeral or a policy', relatedCalculators: 'Work out next', sourcesTitle: 'Census, BLS, NCHS, VA, IRS and eCFR pages behind this page', writtenBy: 'Worked out by',
+  faqTitle: 'Questions people ask before they pay for a funeral or a policy', relatedCalculators: 'Work out next', sourcesTitle: 'Official sources for this page', writtenBy: 'Worked out by',
   asOf: 'Federal figures for', lastUpdated: 'last read on', footerValidated: 'Census 2022, BLS funeral index, NCHS life tables, VA rates from October 1, 2026', footerBrowser: 'Every sum runs in your browser · nothing you type is sent · no quote form, no phone call, no prices from insurers or funeral homes',
   footerDisclaimer: 'Funeral Costs by State is an independent site published by Radif Partners. It is not an insurer, a broker, a funeral home or a government agency, it sells no policy and no funeral, and it gives no financial, tax or legal advice. VA and Social Security claims are made only with those agencies.',
   footerPopular: '',
