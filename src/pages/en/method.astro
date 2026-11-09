@@ -16,10 +16,10 @@ const s10 = E.survival(65, 10, 'f');
 const nonSvc = E.vaAllowance('nonService');
 const imp = E.imputedIncome(45, 200000, 100);
 ---
-<PageLayout title="Funeral Costs by State Method: Census, BLS, NCHS and Limits" description="How Funeral Costs by State works out spending per death, the funeral price trend, the median age at death and the gap after the VA and Social Security pay." lang={lang} jsonLd={[articleSchema({ title: 'How the figures are worked out', description: 'Method of Funeral Costs by State', path: route('method', lang), lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'Method', path: route('method', lang) }])]} breadcrumbs={[{ label: 'Method' }]}>
-  <header class="mb-6"><p class="kicker">Method</p><h1 class="mt-1 text-3xl font-bold text-navy-900 md:text-4xl">How the figures are worked out</h1></header>
+<PageLayout title="Funeral Costs by State Method: Census, BLS, NCHS and Limits" description="How Funeral Costs by State works out spending per death, the funeral price trend, the median age at death and the gap after the VA and Social Security pay." lang={lang} jsonLd={[articleSchema({ title: 'How Funeral Costs by State works out its figures', description: 'Method of Funeral Costs by State', path: route('method', lang), lang }), breadcrumbSchema([{ name: 'Home', path: route('home', lang) }, { name: 'Method', path: route('method', lang) }])]} breadcrumbs={[{ label: 'Method' }]}>
+  <header class="mb-6"><p class="kicker">Method</p><h1 class="mt-1 text-3xl font-bold text-navy-900 md:text-4xl">How Funeral Costs by State works out its figures</h1></header>
   <div class="prose prose-slate max-w-none">
-    <p>Every calculator calls one engine of pure functions, fed by four files: the parameter file of federal amounts and rules, and three data files built by a script from the Census Bureau, the NCHS and the BLS. No amount is typed into a page. The parameter file was last checked against its sources on {displayDate(P.retrieved_at, 'en-US')}. Updates are made by hand when an agency publishes new figures; nothing is fetched automatically.</p>
+    <p>Every calculator on Funeral Costs by State calls one engine of pure functions, fed by four files: the parameter file of federal amounts and rules, and three data files built by a script from the Census Bureau, the NCHS and the BLS. No amount is typed into a page. The parameter file was last checked against its sources on {displayDate(P.retrieved_at, 'en-US')}. Updates are made by hand when an agency publishes new figures; nothing is fetched automatically.</p>
 
     <h2>Spending per death</h2>
     <p>Revenue of all establishments in Census industry 8122 (death care services), 812210 (funeral homes and funeral services) and 812220 (cemeteries and crematories), for each state and the United States, from the 2022 Economic Census file EC2281BASIC (<Fragment set:html={L('census_ec')} />). Deaths in calendar 2022 are estimated as the mean of the Census estimates of deaths for the years July 2021 to June 2022 and July 2022 to June 2023 (<Fragment set:html={L('census_pop')} />). Spending per death = revenue ÷ deaths. United States: {m(us.all as number * us.deaths)} ÷ {h.num(Math.round(us.deaths))} = {m(us.all as number)}. Where the Census withholds a figure (flag D), the cell is left blank, never estimated. Revenue includes merchandise, pre-need sales and cemetery property sold in the year; it is counted where the establishment is.</p>
@@ -39,7 +39,7 @@ const imp = E.imputedIncome(45, 200000, 100);
     <h2>Tests</h2>
     <p>Run on every build: the national spending per death; the index factor; the survival probability recomputed by hand; the median age at death bracketing one half; the VA amounts for each date band and kind of death; the Social Security payment; the IRS example; the estate tax at and above the exclusion; a surrender below cost giving no tax; the IUL floor and cap. A failing test stops the build.</p>
 
-    <h2>What is left out</h2>
+    <h2>What Funeral Costs by State leaves out</h2>
     <ul>
       <li>insurance and funeral prices, underwriting and policy terms, which differ between providers;</li>
       <li>county or state help for indigent burials, employer or union death benefits, and Social Security survivor benefits;</li>

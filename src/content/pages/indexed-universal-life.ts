@@ -15,7 +15,7 @@ export default definePage({
   title: 'Indexed Universal Life (IUL): Caps, Floors and Crediting',
   description: 'Indexed universal life (IUL) explained with a crediting calculator: what the cap, the floor and the participation rate do to an index return, before charges.',
   h1: 'Indexed universal life: what the cap and the floor really do',
-  intro: 'Type five years of index changes, a cap, a participation rate and a floor. The calculator shows what the policy credits against what the index did.',
+  intro: 'Type five years of index changes and an indexed universal life policy’s cap, participation rate and floor. The calculator shows what the policy credits against what the index did.',
   resume: (h) => {
     const r = h.E.iulYears(PATH, CAP, PAR, FLOOR);
     return `Indexed universal life, or IUL, is a universal life policy whose cash account is credited with interest linked to a stock market index, usually through a one-year segment with three settings: a cap, the highest rate credited in a year; a participation rate, the share of the index gain that counts; and a floor, often zero, below which the credit never falls. The index itself is not bought: the account does not receive dividends, and the cost of insurance and policy fees are deducted every month whatever the credit. On a five-year path where the index moves ${PATH.map((x) => h.pc(x, 0)).join(', ')}, a ${h.pc(CAP, 0)} cap, ${h.pc(PAR, 0)} participation and a ${h.pc(FLOOR, 0)} floor credit ${h.pc(r.credited, 1)} in total, against ${h.pc(r.index, 1)} for the index. The floor removed the loss; the cap removed the best years. Insurers can change caps and participation rates after the sale, within the contract’s minimums. The calculator uses only the path and settings you type: this site publishes no index data and no insurer rates.`;
@@ -43,7 +43,7 @@ ${h.table(['Year', 'Index change', `Cap ${h.pc(CAP, 0)}, 100%`, `Cap ${h.pc(CAP,
 <h2>Loans and the tax position</h2>
 <p>IUL is sold for tax-deferred growth and tax-free access through loans. The death benefit is generally free of income tax, and a loan is not income while the policy stays in force. If the policy lapses or is surrendered with a loan outstanding, the loan counts as proceeds and the gain above the premiums paid is taxable, as IRS Publication 525 describes; the ${h.a('cash-value-life-insurance', 'cash value page')} has the calculator. A policy funded too fast becomes a modified endowment contract, with loans taxed as gain first.</p>
 
-<h2>Who it suits</h2>
+<h2>Who indexed universal life suits</h2>
 <p>A buyer with a lifelong need for cover, income high enough to fund the policy well above its minimum for many years, and the time to read the illustration and the contract. For a family that needs cover while children grow up, the ${h.a('how-much-life-insurance', 'DIME calculator')} and a term policy usually answer the question at a fraction of the premium.</p>
 <p>A last check before signing: ask for the illustration at the guaranteed minimum cap and participation, not only at the current ones, and see whether the policy stays in force to age 100 on those terms with the premium you plan to pay.</p>
 `;

@@ -15,7 +15,7 @@ export default definePage({
   title: 'Final Expense Insurance: When Premiums Pass the Payout',
   description: 'Final expense insurance checked on your own quote: the age when premiums add up to the face amount, the chance of living past it, and premiums paid on average.',
   h1: 'Final expense insurance for seniors: when premiums pass the payout',
-  intro: 'Type the monthly premium and the amount the policy pays out (its face amount) from a quote. The calculator gives the age at which your premiums add up to that payout, and the odds of living past it.',
+  intro: 'Type the monthly premium and the amount a final expense insurance policy pays out (its face amount) from a quote. The calculator gives the age at which your premiums add up to that payout, and the odds of living past it.',
   resume: (h) => {
     const r = h.E.finalExpense({ age: AGE, sex: 'm', premium: PREMIUM, face: FACE });
     return `Final expense insurance, also sold as funeral or burial insurance, is a small whole life policy, usually paying out (its face amount) a few thousand to a few tens of thousands of dollars, sold to people in their fifties to eighties to pay for a funeral and final bills. The premium is level and the cover lasts for life, so the key number is how many years of premiums it takes to pay in the face amount. A man of ${AGE} quoted ${h.m(PREMIUM)} a month for ${h.m(FACE)} of cover pays ${h.m(r.yearly)} a year and reaches the face amount at age ${h.num(Math.floor(r.breakEvenAge))}. On the United States life table of the National Center for Health Statistics, ${h.pc(r.aliveAtBreakEven)} of men his age are still alive then, and on average he would pay ${h.m(r.expected)} in premiums before his death. That does not make the policy a bad buy, since it pays at once if death comes early, but it is the trade to understand. This site shows no premiums: the calculator uses only the quote you type.`;
@@ -44,7 +44,7 @@ ${h.table(['Age at purchase', 'Premiums equal face at', 'Alive then, men', 'Aliv
 <h2>Sizing the face amount</h2>
 <p>A face amount bought today is spent at the funeral, years from now, when prices will be higher. The ${h.a('burial-insurance', 'burial insurance calculator')} sets a face amount against the average funeral cost in your state at the age you are likely to reach. The ${h.a('home', 'funeral cost calculator')} takes off what the VA and Social Security pay, and what you have set aside, before you decide how much cover to buy. Nationally, death-care businesses took in ${h.m(h.today('US'))} per death at ${h.month} prices; that average includes every burial with a plot and a headstone, so a simple cremation can need far less.</p>
 
-<h2>Reading a quote</h2>
+<h2>Reading a final expense insurance quote</h2>
 <ul>
 <li>Is the premium level for life, or does it rise or stop at a set age?</li>
 <li>Is the full amount paid from the first day, or is there a graded period (often the first two years, when the policy pays back only your premiums)?</li>

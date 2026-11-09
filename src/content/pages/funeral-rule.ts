@@ -13,7 +13,7 @@ export default definePage({
   title: 'Funeral Price List Rights: the FTC Funeral Rule, Explained',
   description: 'Funeral price list rights under the FTC Funeral Rule: the General Price List, prices by phone, buying only what you want, and a package against itemized check.',
   h1: 'Your funeral price list rights under the FTC (Federal Trade Commission) Funeral Rule',
-  intro: 'Type a package price and the items you would choose from the same price list to see what itemizing saves.',
+  intro: 'Your funeral price list rights let you buy only the items you choose. Type a package price and those items from the same list to see what itemizing saves.',
   resume: (h) => `The federal Funeral Rule, in 16 CFR Part 453, sets what every funeral provider in the United States must show and allow. When you ask about arrangements in person, the funeral home must give you a General Price List to keep, listing the price of each good and service it offers. It must give prices over the phone if you ask, show its casket and outer burial container price lists before you see the merchandise, and give you an itemized statement of what you chose before you pay. You may buy only the items you want, except a basic services fee and anything a law requires; the home may not make buying its own casket or urn a condition of its services, and it may not say that embalming is required when no law requires it. Packages are allowed, but so is choosing item by item. The calculator compares a package price with the items you would pick from the same list, plus cash advance fees.`,
   faqs: (h) => [
     { q: 'Does a funeral home have to give me a price list?', a: 'Yes. Under the federal Funeral Rule the home must give you a General Price List to keep as soon as you begin discussing arrangements, the type of funeral, or the goods and services it offers, in person. It must also show a casket price list and an outer burial container price list before you look at the items themselves.' },
@@ -22,7 +22,7 @@ export default definePage({
     { q: 'Who enforces the Funeral Rule?', a: 'The Federal Trade Commission. A complaint about a funeral home can be sent to the FTC, and also to the state board or agency that licenses funeral directors, which handles license issues. Keep the General Price List and the itemized statement: they are the documents that show what you were offered and what you paid.' },
   ],
   body: (h) => `
-<h2>What the price list must show</h2>
+<h2>What the funeral price list must show</h2>
 <p>The General Price List is the core of the Rule. It must carry the funeral home’s name, address and phone number, an effective date, and the price of each item it offers in a set order, with the disclosures written in the Rule. The lines that every list must price separately, if the home offers them, include:</p>
 <ul>
 <li>forwarding remains to another funeral home, and receiving remains from one;</li>

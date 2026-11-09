@@ -15,7 +15,7 @@ export default definePage({
   title: 'Life Insurance Calculator: How Much Do I Need? DIME Method',
   description: 'How much life insurance you need, worked out with the DIME method: debts, income, mortgage, education and a funeral at US prices, less savings and cover held.',
   h1: 'How much life insurance do I need? The DIME sum, with your figures',
-  intro: 'Type your debts, the income your family would need and for how long, the mortgage, education and savings. Nothing is sent and no quote is asked for.',
+  intro: 'This life insurance calculator adds up what your family would need: type your debts, the income they would need and for how long, the mortgage, education and savings. Nothing is sent and no quote is asked for.',
   resume: (h) => {
     const r = h.E.lifeNeed({ ...D, funeral: Math.round(h.today('US')), group: 0, existing: 0, ssa: true, veteran: 'none' });
     return `How much life insurance you need is the money your family would have to find if you died tomorrow, less what they would already have. The DIME method, used by many planners, adds four things: Debts, Income to replace for the years it is needed, the Mortgage balance, and Education to fund, plus the cost of a funeral. Then it takes off savings, life cover from work and any policy already held. For a household with ${h.m(D.income)} a year of income to replace for ${D.years} years, ${h.m(D.mortgage)} left on the mortgage, ${h.m(D.debts)} of other debts, ${h.m(D.education)} for education and a funeral at the US spending per death of ${h.m(h.today('US'))}, the total is ${h.m(r.gross)}. With ${h.m(D.savings)} of savings and the Social Security lump sum of ${h.m(h.P.ssa.lumpSum)}, the cover still needed is ${h.m(r.need)}. A rule of thumb of ten times income would give ${h.m(D.income * 10)}. The calculator does the sum with your own figures.`;
@@ -47,7 +47,7 @@ ${h.table(['Age', '20 years, men', '20 years, women', '30 years, men', '30 years
 </details>
 <p>The ${h.a('term-life-insurance-rates-by-age', 'term rates page')} adds the two federal rate tables that can be published, VGLI and the IRS table for group cover, as yardsticks.</p>
 
-<h2>Term, whole or universal</h2>
+<h2>Term, whole or universal life insurance</h2>
 <p>A need that lasts for a set number of years, while children grow up or a mortgage is paid, is what term insurance is built for. A need that lasts for life, such as a funeral, an estate that will owe tax, or a dependent who will always need support, is what permanent insurance, whole or universal life, is built for, at a much higher premium for the same face amount. The ${h.a('cash-value-life-insurance', 'cash value page')} shows how a permanent policy is taxed if it is surrendered, and the ${h.a('life-insurance-taxes', 'tax page')} when a payout can be taxed at all.</p>
 
 <h2>What the sum leaves out</h2>

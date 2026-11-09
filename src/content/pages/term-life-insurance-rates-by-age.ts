@@ -29,7 +29,7 @@ export default definePage({
       return [lbl, h.m2(b.per10k), h.m2(h.E.vgliMonthly(a, 100000)), h.m2(h.E.vgliMonthly(a, h.P.vgli.max)), h.pc(h.E.payoutChance(a, 5, 'm'))]; });
     const irs = h.P.irsTable22.bands.map((b) => { const lbl = b.from === 0 ? `Under ${b.to + 1}` : b.to >= 120 ? `${b.from} and over` : `${b.from} to ${b.to}`; return [lbl, h.m2(b.cost), h.m2(b.cost * 12 * 100)]; });
     return `
-<h2>VGLI monthly rates by age</h2>
+<h2>VGLI term life rates by age</h2>
 <p>Rates in force from ${h.date(h.P.vgli.asOf)}, per ${h.m(10000)} of cover, and for ${h.m(100000)} and the maximum of ${h.m(h.P.vgli.max)}. The last column is the chance of a man of the first age of the band dying within five years, NCHS 2024.</p>
 <details class="repli-section"><summary>VGLI rates by age band</summary>
 ${h.table(['Age band', `Per ${h.m(10000)}`, `${h.m(100000)} of cover`, `${h.m(h.P.vgli.max)} of cover`, '5-year death chance, men'], rows, `VA, VGLI premium rates (page updated ${h.date(h.P.vgli.pageUpdated)}). Same rates for men and women, no health rating.`, ['l', 'r', 'r', 'r', 'r'])}

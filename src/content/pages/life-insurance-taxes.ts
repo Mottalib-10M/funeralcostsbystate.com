@@ -15,7 +15,7 @@ export default definePage({
   title: 'Life Insurance Tax Rules: Income, Estate Tax and Work Cover',
   description: 'Life insurance taxes: when a death benefit is free of income tax, when it counts in a federal estate at the 2026 exclusion, and how employer cover is taxed.',
   h1: 'Is life insurance taxable? Income tax, estate tax and cover from work',
-  intro: 'Type the size of the estate and the death benefit. The calculator shows the extra federal estate tax the payout causes when the insured owned the policy.',
+  intro: 'Type the size of the estate and the life insurance death benefit. The calculator shows the extra federal estate tax the payout causes when the insured owned the policy.',
   resume: (h) => {
     const r = h.E.estateTaxOnPayout(ESTATE, PAYOUT);
     return `A life insurance death benefit paid to a beneficiary is generally not taxable income: IRS Publication 525 says proceeds paid because of the insured person’s death are not included in income, unless the policy was transferred for a price. Interest added when the payout is held or paid in installments is taxable. Estate tax is a separate question. If the insured owned the policy, or could change its beneficiary, the death benefit counts in the gross estate, reported on Schedule D of Form 706. For ${h.P.year}, the IRS sets the basic exclusion at ${h.m(h.P.estate.basicExclusion)} per person, and the tax above it is charged at up to ${h.pc(h.P.estate.topRate, 0)}. An estate of ${h.m(ESTATE)} owes nothing; add a ${h.m(PAYOUT)} death benefit and it owes about ${h.m(r.extra)}. A policy given away within ${h.P.estate.lookbackYears} years of death is pulled back into the estate. Group-term cover from an employer above ${h.m(h.P.irsTable22.exclusion)} adds a small taxable amount to wages each year.`;
@@ -48,7 +48,7 @@ ${h.table(['Estate without the policy', 'Tax without it', 'Tax with it', 'Extra 
 
 <h2>Who reports what</h2>
 <p>The insurer reports taxable amounts on Form 1099-R or 1099-INT; the executor reports a policy owned by the insured on Schedule D of Form 706, with a statement from the insurer, if the estate must file. This page is general information read on ${h.src('irs_525', 'IRS Publication 525')}, the ${h.src('irs_estate', 'IRS estate and gift tax page')} and the ${h.src('irs_706', 'Form 706 instructions')}; a tax professional can apply it to a real estate.</p>
-<h2>State taxes</h2>
+<h2>State tax on life insurance</h2>
 <p>This page covers federal tax only. Some states levy their own estate tax, with an exclusion much lower than the federal one, and a few levy an inheritance tax paid by the heirs, where life insurance paid to a named beneficiary is often, but not always, exempt. State income tax generally follows the federal treatment of a death benefit. The state’s revenue department publishes its own rules.</p>
 <h2>Ownership and beneficiary, in practice</h2>
 <p>Three names on a policy decide its tax: the insured, the owner and the beneficiary. When they are the same person and the estate, the payout counts in the estate. When the owner is someone other than the insured, such as a spouse, a child or a trust, the payout generally stays out of the insured’s estate, unless the transfer happened within the last ${h.P.estate.lookbackYears} years. When three different people hold the three roles, the payout can be treated as a gift from the owner to the beneficiary, which is one more reason to set the roles up with care.</p>

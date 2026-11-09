@@ -103,7 +103,7 @@ const groups = GROUPS_ORDER.map((g) => ({ g, pages: PAGES.filter((p) => p.group 
   </section>
 
   <section class="not-prose my-10" aria-labelledby="states-title">
-    <h2 id="states-title" class="text-2xl font-bold text-navy-900">Where a death costs the most and the least</h2>
+    <h2 id="states-title" class="text-2xl font-bold text-navy-900">Funeral cost by state: where a death costs the most and the least</h2>
     <p class="mt-2 text-navy-800">Funeral and cemetery spending per death at {h.month} prices. The highest state is {h.num1(hiLo)} times the lowest. <a href={route('funeral-costs-by-state', lang)} class="font-medium text-accent-700 underline">Every state, A to Z</a>.</p>
     <div class="mt-4 grid gap-6 sm:grid-cols-2">
       <Fragment set:html={h.table(['The 10 highest', 'Per death today'], top.map(rowOf), 'Census Bureau, 2022 Economic Census and population estimates; Bureau of Labor Statistics funeral price index.', ['l', 'r'])} />

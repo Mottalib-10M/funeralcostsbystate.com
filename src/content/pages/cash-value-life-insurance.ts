@@ -15,7 +15,7 @@ export default definePage({
   title: 'Cash Value Life Insurance: Surrender Tax, Loans, Withdrawals',
   description: 'Cash value life insurance explained: how the cash value grows, and how a surrender, a policy loan or a withdrawal is taxed by the IRS, with a tax calculator.',
   h1: 'Cash value life insurance: what you can take out, and the tax on it',
-  intro: 'Type the cash surrender value, the premiums paid and your tax rate. The calculator gives the taxable gain and what is left after federal tax.',
+  intro: 'Type what a cash value life insurance policy pays on surrender (its cash surrender value), the premiums paid and your tax rate. The calculator gives the taxable gain and what is left after federal tax.',
   resume: (h) => {
     const r = h.E.surrenderTax(CASH, PAID, RATE);
     return `Cash value life insurance is permanent cover, whole life or universal life, in which part of each premium builds a savings value inside the policy. That value grows without yearly tax, can be borrowed against or partly withdrawn, and is paid to the owner if the policy is surrendered, less any surrender charge. When a policy is surrendered for cash, IRS Publication 525 says the part of the proceeds above the cost of the policy, generally the premiums paid less any refunded premiums, dividends or untaxed withdrawals, is taxable as ordinary income, not as a capital gain. A policy with a cash surrender value of ${h.m(CASH)} on which ${h.m(PAID)} of premiums were paid gives a taxable gain of ${h.m(r.gain)}; at a ${h.pc(RATE)} federal rate, the tax is ${h.m(r.tax)}. A policy loan is not taxed while the policy stays in force, but an unpaid loan becomes part of the proceeds if the policy lapses or is surrendered. The calculator does the sum with your figures.`;
@@ -41,7 +41,7 @@ ${h.table(['Cash surrender value', 'Premiums paid', 'Taxable gain', 'Federal tax
 <li><strong>Policy loan.</strong> The insurer lends against the value, with interest. The loan is not income while the policy is in force. If the policy lapses or is surrendered with a loan unpaid, the loan counts in the proceeds and the gain can be taxed, even though no new cash is paid: the trap known as a tax bomb.</li>
 </ul>
 
-<h2>How the cash value grows</h2>
+<h2>How cash value life insurance grows</h2>
 <p>In a whole life policy, the insurer guarantees a schedule of cash values and may add dividends. In a universal life policy, the account is credited with interest at a declared rate, and the cost of insurance and fees are deducted each month; in an ${h.a('indexed-universal-life', 'indexed universal life')} policy, the interest follows a stock index within a cap and a floor. In all three, the cost of the insurance rises with age, which is why a universal life policy that is underfunded can lapse late in life when the charges outgrow the account.</p>
 
 <h2>At death</h2>

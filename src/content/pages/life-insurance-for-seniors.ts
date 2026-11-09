@@ -14,7 +14,7 @@ export default definePage({
   title: 'Life Insurance for Seniors: How Long Cover Must Last',
   description: 'Life insurance for seniors: how long cover bought after 60 has to last in your state, the chance a 10-year term pays out, and what permanent cover costs.',
   h1: 'Life insurance for seniors: how long the cover has to last',
-  intro: 'Pick your state, age and sex. The calculator shows the chance a term policy pays, the age half and a quarter of people live past, and the VGLI rate at that age.',
+  intro: 'Pick your state, age and sex to see how long life insurance has to last at your age. The calculator shows the chance a term policy pays, the age half and a quarter of people live past, and the VGLI rate at that age.',
   resume: (h) => {
     const s = 'TX' as const;
     return `Life insurance for seniors is a question of time. After 60, the chance of dying within any term rises fast, so term policies become dear and often end before they are needed, while whole life and final expense policies last for life but must be paid for as long as you live. On the NCHS 2022 life table for Texas, a woman of 68 has a ${h.pc(h.E.payoutChance(68, 10, 'f', s))} chance of dying within ten years, so a 10-year term would most likely expire unused; half the women of her age live past ${h.num1(h.E.medianAgeAtDeath(68, 'f', s))} and a quarter past ${h.num1(h.E.ageAtQuantile(68, 'f', 0.75, s))}. A permanent policy bought at 68 would be paid for, on average, for about ${h.num1(h.E.finalExpense({ age: 68, sex: 'f', state: s, premium: 1, face: 1 }).expected / 12)} years. As a federal yardstick, VGLI charges ${h.m2(h.E.vgliMonthly(68, 10000))} a month per ${h.m(10000)} at that age. The calculator gives the same figures for any state, age and term.`;
@@ -43,7 +43,7 @@ ${h.table(['Age', '10-year death chance, men', 'Women', 'Median age at death, me
 ${h.table(['State', 'Men at 65, years', 'Women at 65, years'], leRows, 'NCHS, U.S. State Life Tables, 2022. All 51 states are in the calculator.', ['l', 'r', 'r'])}
 </details>
 
-<h2>What the numbers mean for a policy</h2>
+<h2>What the numbers mean for life insurance</h2>
 <p>A term policy bought at 70 for ten years pays out in a minority of cases, because most buyers outlive it. It suits a need that ends, such as a loan. For a need that does not end, a term policy has a worse flaw: it may expire just when the odds of a claim are highest, and renewing at 80 costs far more, if it is offered at all.</p>
 <p>A permanent policy, whole life or final expense, covers the whole span, but the premiums continue too. Someone who buys at 70 and lives to the age one in four reach pays for more than twenty years. The ${h.a('final-expense-insurance', 'break-even calculator')} turns a quote into the age at which the premiums add up to the face amount, and the ${h.a('whole-life-insurance-rates-by-age', 'whole life yardstick')} shows what premium would match the face amount on average.</p>
 <p>Policies with no health questions accept everyone in their age range but grade the benefit in the first years; the ${h.a('burial-insurance-no-waiting-period', 'waiting period page')} shows what they pay then. Veterans can keep VGLI for life, at the rate of each age band, and the VA does not ask health questions of those who convert in time.</p>

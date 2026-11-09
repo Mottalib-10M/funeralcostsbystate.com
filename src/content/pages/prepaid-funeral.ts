@@ -13,7 +13,7 @@ export default definePage({
   title: 'Prepaid Funeral Plan vs Savings: Which Costs Less, by State',
   description: 'Prepaid funeral plan against savings: what the same funeral costs at the age you are likely to reach in your state, and what you would have to set aside now.',
   h1: 'Prepaid funeral plan or savings: which costs less',
-  intro: 'Pick your state and type the prepaid price you were quoted. The calculator grows it to the age you are likely to reach and works out what saving instead would take today. Burial insurance is compared further down.',
+  intro: 'Pick your state and type the price of the prepaid funeral plan you were quoted. The calculator grows it to the age you are likely to reach and works out what saving instead would take today. Burial insurance is compared further down.',
   resume: (h) => {
     const t = h.E.funeralTrend(); const price = Math.round(h.E.spendToday('TX').homes as number);
     const c = h.E.prepaidCase({ price, age: 70, sex: 'f', rate: 0.03, state: 'TX' }); const r = c.median; const later = c.later;
@@ -37,7 +37,7 @@ ${h.table(['Age today', 'Median age at death', 'Funeral by then', 'Save today at
 </details>
 <p>When the savings rate after tax is below the funeral trend, the sum needed today is above today’s price, and prepaying at today’s price comes out ahead on the items it guarantees. When the rate is above the trend, saving does. The younger the buyer, the longer the wait and the larger the difference either way.</p>
 
-<h2>What else to weigh</h2>
+<h2>Prepaid funeral plan or savings: what else to weigh</h2>
 <p>The calculator compares money. Three other things decide many purchases.</p>
 <ul>
 <li><strong>Flexibility.</strong> Savings, or a bank account payable on death to the person who will arrange the funeral, can pay any funeral home, in any state, for any choice made later. A prepaid contract binds the money to one provider and one plan, unless it can be transferred.</li>

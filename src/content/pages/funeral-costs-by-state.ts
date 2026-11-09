@@ -37,7 +37,7 @@ export default definePage({
     const shareHomes = (us.homes as number) / (us.all as number);
     const az = [...h.E.STATES].map((s) => [h.E.stateName(s), h.m(h.today(s))]);
     return `
-<h2>Every state, A to Z</h2>
+<h2>Average funeral cost in every state, A to Z</h2>
 <p>Average funeral cost at ${h.month} prices: what the state’s funeral homes, cemeteries and crematories took in during 2022, divided by its deaths that year, then brought to today with the federal funeral price index. The national figure is ${h.m(usT.all as number)}.</p>
 ${h.table(['State', `Per death, ${h.month}`], az, 'Census Bureau, 2022 Economic Census and population estimates; Bureau of Labor Statistics funeral price index.', ['l', 'r'])}
 
