@@ -52,16 +52,19 @@ describe('calculateur principal : mêmes chiffres que le texte de l’accueil', 
 });
 
 describe('page prépayée : calculateur et tableau d’accord', () => {
-  it('70 ans, femme : même âge médian et même coût futur que la ligne 70 du tableau', () => {
+  it('65 ans, femme (l’exemple unique du site) : même âge médian et même coût futur que la ligne 65 du tableau', () => {
     const spec = getSpec('prepaid');
     const v = Object.fromEntries(spec.inputs.map((i) => [i.id, i.def]));
     const out = spec.run(v, {});
-    const c = E.prepaidCase({ price: v.price, age: 70, sex: 'f', rate: 0.02, state: E.STATES[v.state] });
+    const c = E.prepaidCase({ price: E.spendToday('TX').all as number, age: 65, sex: 'f', rate: 0.02, state: E.STATES[v.state] });
+    expect(v.age).toBe(65); expect(v.price).toBe(Math.round(E.spendToday('TX').all as number));
+    // prix chargé = moyenne de l'État : même dollar futur que l'accueil
+    expect(out.rows[0][1]).toBe(m(E.funeralGap({ ...FC_DEFAULTS }).future));
     expect(E.STATES[v.state]).toBe('TX');
-    // même femme de 70 ans au Texas : même âge médian que la page assurance obsèques (testeurs du 2026-11-09)
-    expect(c.median).toBe(E.medianAgeAtDeath(70, 'f', 'TX'));
+    // même femme de 65 ans au Texas : même âge médian que l’accueil et la page assurance obsèques (testeurs du 2026-11-10)
+    expect(c.median).toBe(E.medianAgeAtDeath(65, 'f', 'TX'));
     expect(out.rows[0][1]).toBe(m(c.later));
-    expect(out.rows[0][0]).toContain(new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(c.median));
+    expect(out.rows[0][0]).toContain(`age ${Math.floor(c.median)}`);
     const body = pageById('prepaid-funeral')!.body(helpers(true));
     expect(has(body, m(c.later))).toBe(true);
   });

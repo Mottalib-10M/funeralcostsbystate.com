@@ -44,7 +44,6 @@ ${h.table(['Age', 'Years of premiums, men', 'Yardstick, men', 'Years of premiums
 <p>Type the premium of a quote into the calculator. It shows the age at which your premiums would add up to the face amount, and how much you would pay in on average. A quote far above the yardstick is a policy where the cash value, the guarantees or the insurer’s costs carry a large share of the premium; that can be the right choice, but it is worth knowing. A whole life policy also builds a cash value that can be borrowed against or surrendered; the ${h.a('cash-value-life-insurance', 'cash value page')} shows how a surrender is taxed.</p>
 <p>For small policies sold to pay for a funeral, the ${h.a('final-expense-insurance', 'final expense break-even')} page asks the same question with the premium you were quoted, and the ${h.a('life-insurance-for-seniors', 'cover after 60 page')} shows how long cover bought late has to last.</p>
 
-<h2>Paid-up at 65 or 100</h2>
 <p>Some whole life policies stop the premiums at a set age, such as 65 or 100, while the cover continues. Fewer years of premiums mean a higher premium for each year. The calculator on the final expense page lets you set the age at which premiums stop and shows the most you can pay in.</p>
 `;
   },

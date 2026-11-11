@@ -47,7 +47,6 @@ ${h.table(['Age', '2 years, men', '2 years, women', '3 years, men', '3 years, wo
 </ul>
 <p>Whatever the type, the ${h.a('final-expense-insurance', 'break-even calculator')} shows how many years of premiums add up to the face amount, and the ${h.a('burial-insurance', 'burial insurance page')} whether the face amount will still cover a funeral in your state.</p>
 
-<h2>Other ways to avoid a waiting period</h2>
 <p>Group life insurance at work is usually issued without health questions up to a set amount, but it ends when the job does. Veterans leaving service can convert their service members’ group cover to VGLI without health questions if they apply within a set period after separation; the ${h.a('term-life-insurance-rates-by-age', 'term rates page')} shows the VGLI rates. Money set aside in a payable-on-death account has no waiting period at all.</p>
 `;
   },

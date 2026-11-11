@@ -44,7 +44,6 @@ ${h.table(['Cash surrender value', 'Premiums paid', 'Taxable gain', 'Federal tax
 <h2>How cash value life insurance grows</h2>
 <p>In a whole life policy, the insurer guarantees a schedule of cash values and may add dividends. In a universal life policy, the account is credited with interest at a declared rate, and the cost of insurance and fees are deducted each month; in an ${h.a('indexed-universal-life', 'indexed universal life')} policy, the interest follows a stock index within a cap and a floor. In all three, the cost of the insurance rises with age, which is why a universal life policy that is underfunded can lapse late in life when the charges outgrow the account.</p>
 
-<h2>At death</h2>
 <p>When the insured dies, the beneficiary receives the death benefit, generally free of income tax, and the cash value does not add to it in most whole life designs. If the insured owned the policy, the death benefit counts in the estate for federal estate tax; the ${h.a('life-insurance-taxes', 'tax page')} shows when that matters. A policy sold to a third party for value can lose part of the income tax exclusion.</p>
 <p>Before any of these steps, ask the insurer for an in-force illustration: it shows the current cash value, surrender charges, loans, and how the policy is projected to perform if premiums continue, stop or change.</p>
 `;

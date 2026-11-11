@@ -91,6 +91,7 @@ export default function MiniSimAutonome({ kind, lang = 'en', href, locale = 'en-
           {resultatExemple(touched) && <p data-exemple className="mb-2 inline-flex flex-wrap items-baseline gap-x-1 rounded-md border px-2 py-0.5 text-xs" style={{ borderColor: '#fcd34d', background: '#fffbeb', color: '#78350f' }}><strong className="font-semibold">{lib.exemple}</strong><span>· {lib.exempleAide}</span></p>}
           <p className="text-sm font-medium" style={{ color: C.muted }}>{out.head[0]}</p>
           <p className="tabular-nums mt-1 text-3xl font-bold" style={{ color: C.text }}>{out.head[1]}</p>
+          {out.sous && <p className="mt-1 text-sm" style={{ color: C.text }}>{out.sous}</p>}
           <table className="mt-3 w-full text-sm"><tbody>
             {out.rows.map(([l, x]) => <tr key={l} style={{ borderTop: `1px solid ${C.border}` }}><td className="py-1.5 pr-3 hyphens-auto [overflow-wrap:anywhere]" style={{ color: C.muted }}>{l}</td><td className="tabular-nums py-1.5 text-right [overflow-wrap:break-word]" style={{ color: C.text }}>{x}</td></tr>)}
           </tbody></table>

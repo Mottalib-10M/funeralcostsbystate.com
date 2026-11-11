@@ -24,7 +24,6 @@ export default definePage({
     { q: 'Is ten times my salary enough life insurance?', a: 'It is a rough starting point, not an answer. A family with a large mortgage and young children can need more; a couple whose children have left home and whose house is paid off can need much less. The DIME sum replaces the multiple with your own debts, the years of income your family would need, and what is already in place.' },
     { q: 'Should I count Social Security survivor benefits?', a: 'They can be large for a young family: a surviving spouse caring for a child under 16, and children under 18, can receive monthly benefits on the worker’s record. This calculator does not estimate them, because they depend on your own earnings record; ssa.gov sets out the conditions and can show your figures. If you know the amount, reduce the income line by it.' },
     { q: 'Does life insurance from work count?', a: 'Yes, while you have it. Group life cover from an employer pays the same as a personal policy, but it usually ends when you leave the job, and it may not be portable. Count it, and check the sum again at each change of job. Cover above a threshold set by the IRS adds a small amount to your taxable wages.' },
-    { q: 'How long should a term life policy last?', a: 'Long enough to cover the years your family depends on your income: often until the youngest child finishes school or the mortgage is paid off, whichever matters more. Some households buy two policies of different lengths, a larger one for the years the children are at home and a smaller one for the remaining mortgage.' },
   ],
   body: (h) => {
     const ages = [30, 35, 40, 45, 50];
@@ -50,7 +49,6 @@ ${h.table(['Age', '20 years, men', '20 years, women', '30 years, men', '30 years
 <h2>Term, whole or universal life insurance</h2>
 <p>A need that lasts for a set number of years, while children grow up or a mortgage is paid, is what term insurance is built for. A need that lasts for life, such as a funeral, an estate that will owe tax, or a dependent who will always need support, is what permanent insurance, whole or universal life, is built for, at a much higher premium for the same face amount. The ${h.a('cash-value-life-insurance', 'cash value page')} shows how a permanent policy is taxed if it is surrendered, and the ${h.a('life-insurance-taxes', 'tax page')} when a payout can be taxed at all.</p>
 
-<h2>What the sum leaves out</h2>
 <p>It does not model Social Security survivor benefits, which depend on your earnings record, or the tax on any part of the payout, which for most families is none. It does not price a policy: no insurer’s prices are published under terms that allow a site to reprint them, and this site asks for no contact details. Once you know the amount and the term, a quote from two or three insurers or an independent agent gives the price.</p>
 `;
   },

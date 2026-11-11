@@ -113,3 +113,18 @@ details.repli-section[open] > summary::after { content: '−'; }
 details.repli-section > summary h2, details.repli-section > summary h3 { margin: 0; padding: 0; border: 0; font-size: inherit; }
 .prose details.repli-section > summary + * { margin-top: .5em; }
 details.repli-section + details.repli-section { margin-top: -1.5em; border-top: 0; }
+
+/* Lisibilité des aides et des résultats (testeurs naïfs du 2026-11-10, 11 sites sur 11) : le texte
+   d'aide en text-xs gris clair (navy-500) n'était pas lu par le testeur de 61 ans, et les tableaux de
+   résultat coupaient les libellés sur 3 ou 4 lignes au téléphone. Aides de champ, hypothèses et note
+   de résultat passent à 15 px en navy-700 ; sous 480 px, chaque ligne de résultat met le libellé sur
+   toute la largeur et la valeur dessous, en gras. Les alertes de saisie (role="status") gardent leur style. */
+p[id$="-help"]:not([role="status"]), [data-fixe], [data-actuellement], [aria-live] > p.text-xs:not([data-exemple]) {
+  font-size: .9375rem; line-height: 1.45; color: var(--color-navy-700);
+}
+@media (max-width: 479px) {
+  [aria-live] table tr:has(> td + td) { display: flex; flex-wrap: wrap; justify-content: space-between; }
+  [aria-live] table tr > td:first-child:not(:only-child) { flex: 1 1 100%; padding-bottom: 0; padding-right: 0; hyphens: manual; overflow-wrap: normal; }
+  [aria-live] table tr:has(> td + td) { border-top: 1px solid var(--color-navy-200); padding: .3rem 0; }
+  [aria-live] table tr > td + td { flex: 1 1 100%; padding-top: .1rem; text-align: left; font-weight: 600; }
+}

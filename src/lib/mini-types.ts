@@ -5,7 +5,8 @@ export interface MiniInput { id: string; label: string; def: number; unit?: stri
   /** `boutons` : une question à deux réponses (No / Yes) se pose avec des boutons, comme sur l'accueil
    *  (testeurs du 2026-11-09 : boutons sur une page, liste déroulante sur l'autre pour la même question). */
   vue?: 'boutons' }
-export interface MiniOut { head: [string, string]; rows: Array<[string, string]>; note?: string }
+/** `sous` (testeurs naïfs du 2026-11-10) : une ligne sous le gros chiffre, qui dit ce qu'il suppose et sur quelle période. */
+export interface MiniOut { head: [string, string]; sous?: string; rows: Array<[string, string]>; note?: string }
 export interface MiniSpec {
   title: string; cta: string; ctaPage?: string; inputs: MiniInput[];
   /** Ce que suppose l'exemple chargé, en mots simples, lu dans la mention « Example, not your result yet: … ». */

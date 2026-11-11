@@ -31,14 +31,17 @@ const STATE_OPTS = STATES.map((s) => ({ value: s, label: stateName(s) }));
 // Testeurs du 2026-11-09 (tour final, 3 sur 3) : « No, or no VA condition is met » ne se comprenait pas et
 // « Other veterans get no burial allowance » inquiétait. Les conditions sont dans les réponses ; « other » (vétéran
 // sans aucune des conditions) compte comme « none » pour le moteur.
-type VetChoice = Veteran | 'other';
+type VetChoice = Veteran | 'other' | 'unsure';
 const VET: Array<{ value: VetChoice; label: string }> = [
   { value: 'none', label: 'No' },
   { value: 'nonService', label: 'Yes, and on VA pension or disability pay, or in VA care' },
   { value: 'service', label: 'Yes, and the death was caused by military service' },
   { value: 'other', label: 'Yes, but none of these' },
+  { value: 'unsure', label: 'Not sure' },
 ];
-const VET_HELP = 'The VA (Department of Veterans Affairs) pays toward a burial only in the two “Yes, and…” cases. A VA claim still open at the death also counts.';
+// Testeurs naïfs du 2026-11-10 (3 sur 3) : « the two "Yes, and…" cases » renvoyait à des choix invisibles, liste fermée.
+// Les cas sont nommés dans l'aide, et « Not sure » compte comme « none » : le reste à payer n'est jamais sous-estimé.
+const VET_HELP = 'The VA (Department of Veterans Affairs) pays only if the death was caused by military service, or if the veteran was on a VA pension or disability pay, had a VA claim open, or died in VA care. Not sure? Choose “Not sure”: no VA money is counted.';
 const listeEt = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
 const SEX = [{ value: 'm', label: 'Male' }, { value: 'f', label: 'Female' }];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -88,14 +91,14 @@ export default function FuneralCalc(p: Props) {
     updateURL({ m: mode === 'plan' ? 'plan' : undefined, st: state, a: mode === 'plan' ? age : undefined, s: mode === 'plan' ? sex : undefined, v: veteran, ss: ssa ? 1 : 0, sv: saved, c: cover || undefined, q: plan || undefined, t: mode === 'plan' && trend !== defTrend ? trend : undefined });
   }, [mode, state, age, sex, veteran, ssa, saved, cover, plan, trend]);
 
-  const vetKind: Veteran = veteran === 'other' ? 'none' : veteran;
+  const vetKind: Veteran = veteran === 'other' || veteran === 'unsure' ? 'none' : veteran;
   const r = useMemo(() => funeralGap({ state, age, sex, veteran: vetKind, ssa, saved, cover, plan, trend: trendFromField(trend) }), [state, age, sex, vetKind, ssa, saved, cover, plan, trend]);
   const share = () => { try { navigator.clipboard.writeText(window.location.href); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* clipboard refused */ } };
   const id = (x: string) => `${p.idPrefix ?? 'fc'}-${x}`;
   const row = (label: string, x: string, strong = false) => (
     <tr key={label} className={strong ? 'total' : ''}><td className="pr-2 text-navy-700">{label}</td><td className="tabular-nums text-right text-navy-900">{x}</td></tr>
   );
-  const atAge = Math.round(r.median);
+  const atAge = Math.floor(r.median);
   const now = mode === 'now';
   const where = stateName(state);
   const costLabel = plan > 0 ? 'The funeral home’s total you typed' : `Average funeral cost in ${where} today`;
@@ -105,8 +108,8 @@ export default function FuneralCalc(p: Props) {
   const phraseRetrait = r.paid > 0 ? `minus ${m(r.paid)} of ${listeEt(retire)}.` : 'with nothing taken off yet.';
   const sansAide = r.va === 0 && r.ssa === 0 ? ' No VA or Social Security payment applies here.' : '';
   const suppose = now
-    ? `a death in ${where}, not a veteran, no husband, wife or child under 18, ${m(d.saved)} of savings and no life insurance`
-    : `a ${sex === 'f' ? 'woman' : 'man'} of ${age} in ${where}, not a veteran, ${m(d.saved)} set aside and no life insurance`;
+    ? `a death in ${where}, not a veteran, no husband, wife or child under 18, ${d.saved > 0 ? `${m(d.saved)} of savings` : 'no savings counted'} and no life insurance`
+    : `a ${sex === 'f' ? 'woman' : 'man'} of ${age} in ${where}, not a veteran, ${d.saved > 0 ? `${m(d.saved)} set aside` : 'nothing set aside'} and no life insurance`;
   const modeBtn = (v: Mode, label: string, sub: string) => (
     <button type="button" aria-pressed={mode === v} onClick={() => setMode(v)}
       className={`min-h-12 rounded-lg border px-3 py-2 text-left text-sm leading-snug transition-colors ${mode === v ? 'border-accent-600 bg-accent-600 text-white' : 'border-navy-300 bg-white text-navy-800 hover:bg-navy-50'}`}>
@@ -128,9 +131,11 @@ export default function FuneralCalc(p: Props) {
             <div data-cout-etat className="border-l-4 border-navy-400 bg-navy-50 px-3 py-2">
               <p className="text-sm text-navy-700">{costLabel}</p>
               <p className="tabular-nums text-3xl font-bold text-navy-900">{m(r.today)}</p>
-              <p className="text-xs text-navy-600">{plan > 0 ? 'Your own figure replaces the state average.' : 'Average of all funerals, from a simple cremation to a full burial. Your price can be much lower or higher: not a quote.'}</p>
+              <p data-fixe className="text-xs text-navy-600">{plan > 0 ? 'Your own figure replaces the state average.' : 'Average of all funerals today, from a simple cremation to a full burial. Your price can be much lower or higher: not a quote.'}</p>
+              <p className="mt-1 text-sm font-medium text-navy-800">What is left for the family to pay is worked out below, from four short questions.</p>
             </div>
           )}
+          {now && <NumberField id={id('plan')} label="Got a funeral home’s price list? Its total" value={plan} onChange={mark('plan', setPlan)} unit="$" max={1_000_000} help={`Type the total and it replaces the ${where} average. No price yet? Leave it empty.`} />}
           {!now && (
             <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2 sm:gap-y-0">
               <NumberField id={id('age')} label="Age today" value={age} onChange={mark('age', setAge)} unit="yrs" min={18} max={100} help="Of the person whose funeral it is" />
@@ -140,20 +145,19 @@ export default function FuneralCalc(p: Props) {
           <SelectField id={id('veteran')} label="Was the person a veteran?" value={veteran} onChange={mark('veteran', (v: string) => setVeteran(v as Veteran))} options={VET} help={VET_HELP} />
           <div>
             <div className="grid"><Toggle id={id('ssa')} label="A surviving husband or wife, or a child under 18?" value={ssa ? '1' : '0'} onChange={mark('ssa', (v: string) => setSsa(v === '1'))} options={[{ value: '0', label: 'No' }, { value: '1', label: 'Yes' }]} /></div>
-            <p className="mt-1 text-xs text-navy-500">Only they can claim the {m(P.ssa.lumpSum)} that Social Security pays once</p>
+            <p id={`${id('ssa')}-help`} className="mt-1 text-xs text-navy-500">Only they can claim the {m(P.ssa.lumpSum)} that Social Security pays once. Not sure? Choose No: that money is then not counted.</p>
           </div>
           <div className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2 sm:gap-y-0">
-            <NumberField id={id('saved')} label={now ? 'Money the family can use' : 'Money set aside for it'} value={saved} onChange={mark('saved', setSaved)} unit="$" max={10_000_000} help="Savings, a bank account that passes to the family" />
-            <NumberField id={id('cover')} label="Life insurance that will pay" value={cover} onChange={mark('cover', setCover)} unit="$" max={50_000_000} help="0 if there is no policy" />
+            <NumberField id={id('saved')} label={now ? 'Money the family can use' : 'Money set aside for it'} value={saved} onChange={mark('saved', setSaved)} unit="$" max={10_000_000} help="Savings, or a bank account that passes to the family. Not sure? Leave it empty: the result then shows the most to find." />
+            <NumberField id={id('cover')} label="Life insurance that will pay" value={cover} onChange={mark('cover', setCover)} unit="$" max={50_000_000} help="Leave it empty if there is no policy, or if you do not know yet." />
           </div>
-          {now && <NumberField id={id('plan')} label="A funeral home’s total price, if you have one" value={plan} onChange={mark('plan', setPlan)} unit="$" max={1_000_000} help={`Leave 0 to use the ${where} average`} />}
           {!now && (
             <details className="border-t border-navy-200 pt-3">
               <summary className="cursor-pointer text-sm font-semibold text-navy-800">Have a funeral home’s price? Prices rising faster?
                 <span data-actuellement className="mt-0.5 block text-xs font-normal text-navy-600">Price used: {plan > 0 ? m(plan) : `the ${where} average`} · prices rising {formatNumber(trend, 1)}% a year</span></summary>
               <div className="mt-3 grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2 sm:gap-y-0">
                 <NumberField id={id('plan')} label="A funeral home’s total today" value={plan} onChange={mark('plan', setPlan)} unit="$" max={1_000_000} help={`Leave 0 to use the ${where} average`} />
-                <NumberField id={id('trend')} label="Funeral prices rise each year" value={trend} onChange={mark('trend', setTrend)} unit="%" max={20} decimals={1} help={`Funeral price index, ${P.cpi.trendFrom} to ${P.cpi.trendTo}`} />
+                <NumberField id={id('trend')} label="Funeral prices rise each year" value={trend} onChange={mark('trend', setTrend)} unit="%" max={20} decimals={1} help={`How fast funeral prices rose a year from ${P.cpi.trendFrom} to ${P.cpi.trendTo}, on the federal index of funeral prices. Not sure? Keep it.`} />
               </div>
             </details>
           )}
@@ -161,7 +165,7 @@ export default function FuneralCalc(p: Props) {
         <div data-resultat aria-live="polite" className="self-start border-l-4 border-accent-500 bg-accent-50 p-4">
           <MentionExemple lang="en" touched={touched} suppose={suppose} />
           {now ? (<>
-            <p className="text-sm font-medium text-navy-700">Left to pay today, after what is paid</p>
+            <p className="text-sm font-medium text-navy-700">Left for the family to pay today</p>
             <p className="tabular-nums mt-1 text-4xl font-bold text-navy-900">{m(r.gapToday)}</p>
             <p className="mt-1 text-sm text-navy-800">{m(r.today)} {plan > 0 ? 'quoted' : `average in ${where}`}, {phraseRetrait}{sansAide}</p>
           </>) : (<>
@@ -174,8 +178,8 @@ export default function FuneralCalc(p: Props) {
             {!now && row(`Same at age ${atAge}, prices up ${formatPercent(trend / 100, 1)} a year`, m(r.future), true)}
             {row('VA burial and plot allowance', r.va > 0 ? `− ${m(r.va)}` : 'none')}
             {row('Social Security one-time payment', r.ssa > 0 ? `− ${m(r.ssa)}` : 'none')}
-            {row('Money and life insurance', `− ${m(saved + cover)}`)}
-            {row(now ? 'Left to pay today' : `Left to pay at ${atAge}`, m(now ? r.gapToday : r.gapFuture), true)}
+            {row('Savings and life insurance', saved + cover > 0 ? `− ${m(saved + cover)}` : 'none')}
+            {row(now ? 'Left for the family to pay today' : `Left to pay at ${atAge}`, m(now ? r.gapToday : r.gapFuture), true)}
           </tbody></table>
           <p className="mt-2 text-xs text-navy-600">{plan > 0 ? 'Uses the total you typed. ' : `Based on what funeral homes and cemeteries in ${where} took in per death, updated to ${monthLabel(latestMonth)} prices. An average, not a quote. `}{now ? '' : 'Age from the state’s life table. '}{p.vaHref ? <><a href={p.vaHref} className="underline">Who qualifies for the VA allowance</a>. </> : ''}Estimate only, not advice.</p>
         </div>

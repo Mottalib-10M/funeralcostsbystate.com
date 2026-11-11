@@ -38,7 +38,7 @@ export default function MiniSim({ kind, lang = 'en', href, defaults = {}, primar
   }, []);
   const fid = (id: string) => `${idPrefix}-${kind}-${id}`;
   const champ = (i: MiniInput) => (i.options && i.vue === 'boutons'
-    ? <div key={i.id}><div className="grid"><Toggle id={fid(i.id)} label={i.label} value={String(v[i.id])} onChange={(x) => set(i.id)(Number(x))} options={i.options} /></div>{i.help && <p className="mt-1 text-xs text-navy-500">{i.help}</p>}</div>
+    ? <div key={i.id}><div className="grid"><Toggle id={fid(i.id)} label={i.label} value={String(v[i.id])} onChange={(x) => set(i.id)(Number(x))} options={i.options} /></div>{i.help && <p id={`${fid(i.id)}-help`} className="mt-1 text-xs text-navy-500">{i.help}</p>}</div>
     : i.options
     ? <SelectField key={i.id} id={fid(i.id)} label={i.label} value={String(v[i.id])} onChange={(x) => set(i.id)(Number(x))} options={i.options} help={i.help} />
     : <NumberField key={i.id} id={fid(i.id)} label={i.label} value={v[i.id]} onChange={set(i.id)} unit={i.unit} max={i.max} decimals={i.decimals} help={i.help} />);
@@ -59,8 +59,9 @@ export default function MiniSim({ kind, lang = 'en', href, defaults = {}, primar
         </form>
         <div aria-live="polite" {...(primary ? { 'data-resultat': '' } : {})} className="self-start border-l-4 border-accent-500 bg-accent-50 p-4">
           {!spec.sansMention && <MentionExemple lang={lang} touched={touched} suppose={spec.exemple?.(v)} />}
-          <p className="text-sm font-medium text-navy-700">{out.head[0]}</p>
+          <p className="text-sm font-semibold text-navy-800">{out.head[0]}</p>
           <p className="tabular-nums mt-1 text-4xl font-bold text-navy-900">{out.head[1]}</p>
+          {out.sous && <p data-fixe className="mt-1 text-sm text-navy-800">{out.sous}</p>}
           <table className="ledger mt-3 w-full text-sm"><tbody>
             {out.rows.map(([l, x]) => <tr key={l}><td className="pr-3 text-navy-700">{l}</td><td className="tabular-nums text-right text-navy-900">{x}</td></tr>)}
           </tbody></table>

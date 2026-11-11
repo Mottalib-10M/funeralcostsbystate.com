@@ -37,11 +37,10 @@ ${h.table(['Year', 'Index change', `Cap ${h.pc(CAP, 0)}, 100%`, `Cap ${h.pc(CAP,
 </details>
 <p>The floor matters most in a falling year and the cap in a strong one. Over a run of years that includes both, the credit lands well below the index in rising markets and above it in falling ones. An illustration that assumes the same rate every year hides that pattern; the sequence of years is what the terms act on.</p>
 
-<h2>What is deducted</h2>
+<h2>Charges, loans and the tax position</h2>
 <p>Every month the policy deducts the cost of insurance for the amount at risk, a policy fee, and often a charge on premiums and on the account. The cost of insurance rises with age. In the early years, surrender charges reduce what can be taken out. A credit of a few percent can be outweighed by these charges, which is why the policy illustration, which the insurer provides with both guaranteed and non-guaranteed columns, matters more than the crediting terms alone.</p>
 
-<h2>Loans and the tax position</h2>
-<p>IUL is sold for tax-deferred growth and tax-free access through loans. The death benefit is generally free of income tax, and a loan is not income while the policy stays in force. If the policy lapses or is surrendered with a loan outstanding, the loan counts as proceeds and the gain above the premiums paid is taxable, as IRS Publication 525 describes; the ${h.a('cash-value-life-insurance', 'cash value page')} has the calculator. A policy funded too fast becomes a modified endowment contract, with loans taxed as gain first.</p>
+<p>IUL is sold for tax-deferred growth and tax-free access through loans. The death benefit is generally free of income tax, and a loan is not income while the policy stays in force. If the policy lapses or is surrendered with a loan outstanding, the loan counts as proceeds and the gain above the premiums paid is taxable, as the IRS (the federal tax agency) explains; the ${h.a('cash-value-life-insurance', 'cash value page')} has the calculator. A policy funded too fast becomes a modified endowment contract, with loans taxed as gain first.</p>
 
 <h2>Who indexed universal life suits</h2>
 <p>A buyer with a lifelong need for cover, income high enough to fund the policy well above its minimum for many years, and the time to read the illustration and the contract. For a family that needs cover while children grow up, the ${h.a('how-much-life-insurance', 'DIME calculator')} and a term policy usually answer the question at a fraction of the premium.</p>

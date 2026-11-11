@@ -17,12 +17,12 @@ const inGroup = (g: Group, lang: Locale) => PAGES.filter((p) => p.group === g).m
 // Top menu: short labels, never on two lines (full labels stay in the footer).
 const COURT: Record<Group, string> = { costs: 'After a death', final: 'Planning ahead', life: 'Life insurance', tax: 'Taxes' };
 export const AUTRES_LABEL = 'Life insurance and taxes (not about funerals)';
-/** Trois rubriques : après un décès et préparer à l'avance, dépliées ; assurance vie et impôts réunis, repliés. */
+/** Deux rubriques, dépliées : après un décès, préparer à l'avance. Testeurs naïfs du 2026-11-10 (3 sur 3) : même
+ *  repliée, la rubrique « Life insurance and taxes » (IUL…) faisait croire à un site d'assurance déguisé ; ses pages
+ *  restent dans le pied de page et le sommaire de l'accueil. */
 export const navCategories = (lang: Locale): NavCategory[] => [
   { label: COURT.costs, links: inGroup('costs', lang), ouverte: true },
   { label: COURT.final, links: inGroup('final', lang), ouverte: true },
-  { label: 'Life insurance and taxes', links: [...inGroup('life', lang), ...inGroup('tax', lang)], sousTitre: AUTRES_LABEL,
-    groupes: (['life', 'tax'] as Group[]).map((g) => ({ label: COURT[g], links: inGroup(g, lang) })) },
 ].filter((c) => c.links.length);
 // Entrée par situation (testeurs du 2026-11-09 : « rien ne s'appelle Someone has died »).
 export const navDirect = (lang: Locale): NavLink[] => [{ href: `${route('home', lang)}#start`, label: 'Someone has died? Start here' }];

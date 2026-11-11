@@ -23,7 +23,6 @@ export default definePage({
   faqs: (h) => [
     { q: 'Do beneficiaries pay income tax on life insurance?', a: 'Generally not on the death benefit itself. Publication 525 excludes proceeds paid because of the insured’s death from income. Two exceptions matter: interest, when the insurer holds the money or pays it over time, is taxable; and a policy that was sold or transferred for value can lose part of the exclusion. A beneficiary receives a Form 1099 only for the taxable part.' },
     { q: 'Is a life insurance payout part of the estate?', a: `For federal estate tax, yes, when the insured held any incident of ownership at death, such as the right to change the beneficiary, borrow against the policy or cancel it, or when the payout goes to the estate. Most estates owe nothing anyway, because the ${h.P.year} exclusion is ${h.m(h.P.estate.basicExclusion)} per person. Some states tax estates at much lower thresholds.` },
-    { q: 'How can a policy be kept out of the estate?', a: `By having someone else own it from the start, such as an adult child or an irrevocable life insurance trust that buys the policy and pays the premiums with gifts. Moving an existing policy works too, but if the insured dies within ${h.P.estate.lookbackYears} years of the transfer, the payout is counted in the estate. Gifts to pay premiums can use the annual exclusion of ${h.m(h.P.estate.annualGiftExclusion)} per recipient.` },
     { q: 'Is employer life insurance taxable?', a: `The first ${h.m(h.P.irsTable22.exclusion)} of employer-provided group-term cover is tax-free. Above that, the cost of the excess, from IRS Table 2-2, is added to your wages and is subject to Social Security and Medicare tax, less anything you paid for the cover after tax. It appears on your Form W-2. The calculator further down this page works it out.` },
   ],
   body: (h) => {
@@ -43,14 +42,11 @@ ${h.table(['Estate without the policy', 'Tax without it', 'Tax with it', 'Extra 
 
 <!--tool:mini:imputed|{}-->
 
-<h2>Cash value and surrenders</h2>
+<h2>State tax on life insurance, cash value and ownership</h2>
 <p>A policy surrendered for more than its cost, generally the premiums paid, gives ordinary income on the difference, and a lapse with a loan outstanding can do the same. Policy dividends are generally a return of premium and not taxable until they exceed it. The ${h.a('cash-value-life-insurance', 'cash value page')} has the calculator.</p>
 
-<h2>Who reports what</h2>
 <p>The insurer reports taxable amounts on Form 1099-R or 1099-INT; the executor reports a policy owned by the insured on Schedule D of Form 706, with a statement from the insurer, if the estate must file. This page is general information read on ${h.src('irs_525', 'IRS Publication 525')}, the ${h.src('irs_estate', 'IRS estate and gift tax page')} and the ${h.src('irs_706', 'Form 706 instructions')}; a tax professional can apply it to a real estate.</p>
-<h2>State tax on life insurance</h2>
 <p>This page covers federal tax only. Some states levy their own estate tax, with an exclusion much lower than the federal one, and a few levy an inheritance tax paid by the heirs, where life insurance paid to a named beneficiary is often, but not always, exempt. State income tax generally follows the federal treatment of a death benefit. The state’s revenue department publishes its own rules.</p>
-<h2>Ownership and beneficiary, in practice</h2>
 <p>Three names on a policy decide its tax: the insured, the owner and the beneficiary. When they are the same person and the estate, the payout counts in the estate. When the owner is someone other than the insured, such as a spouse, a child or a trust, the payout generally stays out of the insured’s estate, unless the transfer happened within the last ${h.P.estate.lookbackYears} years. When three different people hold the three roles, the payout can be treated as a gift from the owner to the beneficiary, which is one more reason to set the roles up with care.</p>
 `;
   },
